@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unifier-Module Association</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      background: none;
+      border-radius: 0;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 18px;
+      font-size: 1.2rem;
+      color: #213343;
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 18px;
+      min-height: 480px;
+    }
+    .modules-panel, .unifiers-panel {
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      background: #f7fafd;
+      padding: 18px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+    .modules-panel {
+      min-width: 180px;
+      max-width: 260px;
+    }
+    .modules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .module-btn {
+      background: #fff;
+      border: 1px solid #888;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: background 0.15s, border 0.15s;
+    }
+    .module-btn:hover {
+      background: #e5f5f8;
+      border-color: #00a4bd;
+    }
+    .unifiers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+    }
+    .unifier-card {
+      background: #fff;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      padding: 14px 18px 12px 18px;
+      margin-bottom: 6px;
+      min-width: 220px;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .unifier-title {
+      font-weight: 700;
+      font-size: 1.08rem;
+      margin-bottom: 4px;
+      color: #213343;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #00a4bd;
+      display: inline-block;
+    }
+    .status-dot.new { background: #bbb; }
+    .status-dot.active { background: #00a4bd; }
+    .status-label {
+      font-size: 0.98rem;
+      color: #555;
+    }
+    .modules-in-unifier {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 6px;
+    }
+    .module-in-unifier {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #eaf1fa;
+      border: 1px solid #d3dae6;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.98rem;
+      justify-content: space-between;
+    }
+    .remove-btn {
+      background: #f8c6e6;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      color: #a00a5c;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.15s;
+    }
+    .remove-btn:hover {
+      background: #e66a4a;
+      color: #fff;
+    }
+    .add-module-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .add-module-btn {
+      background: #eaf1fa;
+      border: 1px solid #d3dae6;
+      border-radius: 8px;
+      color: #213343;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 7px 16px;
+      cursor: pointer;
+      transition: background 0.15s, border 0.15s;
+      box-shadow: none;
+    }
+    .add-module-btn:hover {
+      background: #dbe7f3;
+      border-color: #bfc9d9;
+    }
+    .submit-row {
+      display: flex;
+      justify-content: center;
+      margin: 28px 0 18px 0;
+    }
+    .submit-btn {
+      background: #3ec46d;
+      color: #fff;
+      border: none;
+      border-radius: 22px;
+      padding: 12px 44px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(62,196,109,0.08);
+      transition: background 0.15s;
+    }
+    .submit-btn:hover {
+      background: #2e9e54;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main-grid">
+      <div class="modules-panel">
+        <div><strong>Modules from current Deal</strong></div>
+        <div class="modules-list" id="availableModules">
+          <!-- Modules not assigned to any unifier will appear here -->
+        </div>
+      </div>
+      <div class="unifiers-panel">
+        <div class="unifiers-list" id="unifiersList">
+          <!-- Unifier cards will be rendered here -->
+        </div>
+      </div>
+    </div>
+    <div class="submit-row">
+      <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+    </div>
+  </div>
+  <script>
+    // Initial data
+    const modules = [
+      { id: 1, name: 'Module 1' },
+      { id: 2, name: 'Module 2' },
+      { id: 3, name: 'Module 3' },
+      { id: 4, name: 'Module 4' },
+      { id: 5, name: 'Module 5' },
+      { id: 6, name: 'Module 6' }
+    ];
+    const unifiers = [
+      { id: 'A', name: 'Unifier A', status: 'Active', modules: [1,2] },
+      { id: 'B', name: 'Unifier B', status: 'Active', modules: [3,4] },
+      { id: 'C', name: 'Unifier C', status: 'New', modules: [] },
+      { id: 'D', name: 'Unifier D', status: 'New', modules: [] }
+    ];
+
+    function getUnassignedModules() {
+      const assigned = new Set(unifiers.flatMap(u => u.modules));
+      return modules.filter(m => !assigned.has(m.id));
+    }
+
+    function renderModulesList() {
+      const available = getUnassignedModules();
+      const container = document.getElementById('availableModules');
+      container.innerHTML = '';
+      if (available.length === 0) {
+        container.innerHTML = '<div style="color:#888; margin-top:12px;">All modules assigned</div>';
+        return;
+      }
+      available.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'module-btn';
+        btn.textContent = m.name;
+        btn.onclick = () => showAddModuleMenu(m.id);
+        container.appendChild(btn);
+      });
+    }
+
+    function renderUnifiers() {
+      const container = document.getElementById('unifiersList');
+      container.innerHTML = '';
+      unifiers.forEach(u => {
+        const card = document.createElement('div');
+        card.className = 'unifier-card';
+        card.setAttribute('data-unifier-id', u.id);
+        // Title
+        const title = document.createElement('div');
+        title.className = 'unifier-title';
+        title.textContent = u.name;
+        card.appendChild(title);
+        // Status
+        const statusRow = document.createElement('div');
+        statusRow.className = 'status-row';
+        const dot = document.createElement('span');
+        dot.className = 'status-dot ' + (u.status.toLowerCase());
+        statusRow.appendChild(dot);
+        const statusLabel = document.createElement('span');
+        statusLabel.className = 'status-label';
+        statusLabel.textContent = 'Status: ' + u.status;
+        statusRow.appendChild(statusLabel);
+        card.appendChild(statusRow);
+        // Modules in unifier
+        const modList = document.createElement('div');
+        modList.className = 'modules-in-unifier';
+        u.modules.forEach(mid => {
+          const m = modules.find(mm => mm.id === mid);
+          if (!m) return;
+          const row = document.createElement('div');
+          row.className = 'module-in-unifier';
+          row.textContent = m.name;
+          // Remove button
+          const rmBtn = document.createElement('button');
+          rmBtn.className = 'remove-btn';
+          rmBtn.textContent = '×';
+          rmBtn.onclick = () => removeModuleFromUnifier(u.id, m.id);
+          row.appendChild(rmBtn);
+          modList.appendChild(row);
+        });
+        card.appendChild(modList);
+        // Add module button
+        const addRow = document.createElement('div');
+        addRow.className = 'add-module-row';
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-module-btn';
+        addBtn.textContent = 'Agregar módulo ＋';
+        addBtn.onclick = () => showAddModuleMenu(null, u.id);
+        addRow.appendChild(addBtn);
+        card.appendChild(addRow);
+        container.appendChild(card);
+      });
+    }
+
+    // Render a select dropdown for assigning a module to a unifier
+    function showAddModuleMenu(moduleId = null, unifierId = null) {
+      // Remove any previous select menus
+      document.querySelectorAll('.assign-select-row').forEach(e => e.remove());
+      // If moduleId is provided, show a select to pick a unifier
+      if (moduleId !== null) {
+        const container = document.getElementById('availableModules');
+        const selectRow = document.createElement('div');
+        selectRow.className = 'assign-select-row';
+        selectRow.style.margin = '8px 0';
+        const select = document.createElement('select');
+        select.style.padding = '7px 12px';
+        select.style.borderRadius = '6px';
+        select.style.border = '1px solid #bbb';
+        select.style.fontSize = '1rem';
+        select.innerHTML = '<option value="">Asignar a unificador...</option>' +
+          unifiers.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+        select.onchange = function() {
+          if (select.value) {
+            const u = unifiers.find(u => u.id === select.value);
+            if (u) {
+              u.modules.push(moduleId);
+              renderAll();
+            }
+          }
+        };
+        selectRow.appendChild(select);
+        container.appendChild(selectRow);
+        select.focus();
+        return;
+      }
+      // If unifierId is provided, show a select to pick a module
+      if (unifierId !== null) {
+        const available = getUnassignedModules();
+        const card = document.querySelector(`.unifier-card[data-unifier-id="${unifierId}"]`);
+        if (!card) return;
+        const selectRow = document.createElement('div');
+        selectRow.className = 'assign-select-row';
+        selectRow.style.margin = '8px 0';
+        const select = document.createElement('select');
+        select.style.padding = '7px 12px';
+        select.style.borderRadius = '6px';
+        select.style.border = '1px solid #bbb';
+        select.style.fontSize = '1rem';
+        select.innerHTML = '<option value="">Agregar módulo...</option>' +
+          available.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+        select.onchange = function() {
+          if (select.value) {
+            const m = available.find(m => m.id == select.value);
+            const u = unifiers.find(u => u.id === unifierId);
+            if (m && u) {
+              u.modules.push(m.id);
+              renderAll();
+            }
+          }
+        };
+        selectRow.appendChild(select);
+        card.appendChild(selectRow);
+        select.focus();
+      }
+    }
+
+    function removeModuleFromUnifier(unifierId, moduleId) {
+      const u = unifiers.find(u => u.id === unifierId);
+      if (!u) return;
+      u.modules = u.modules.filter(mid => mid !== moduleId);
+      renderAll();
+    }
+
+    function handleSubmit() {
+      // Visual feedback tipo HubSpot
+      const msg = document.createElement('div');
+      msg.textContent = '¡Configuración guardada!';
+      msg.style.background = '#e5f5f8';
+      msg.style.color = '#00a4bd';
+      msg.style.fontWeight = 'bold';
+      msg.style.textAlign = 'center';
+      msg.style.padding = '14px';
+      msg.style.borderRadius = '8px';
+      msg.style.margin = '0 0 18px 0';
+      document.querySelector('.container').insertBefore(msg, document.querySelector('.main-grid'));
+      setTimeout(() => msg.remove(), 1800);
+    }
+
+    function renderAll() {
+      renderModulesList();
+      renderUnifiers();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
