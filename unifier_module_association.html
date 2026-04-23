@@ -188,22 +188,22 @@
 </head>
 <body>
   <div class="container">
-    <!-- Paso previo: Selección de tipo de deal y tabla de modules en un solo contenedor -->
+    <!-- Initial step: Deal type selection and modules overview -->
     <div id="dealStepContainer">
       <form id="dealTypeForm" style="max-width:400px;margin:32px auto 0 auto;padding:24px 28px 18px 28px;border:1px solid #bbb;border-radius:8px;background:#f7fafd;">
-        <h2 style="margin-bottom:18px;">What type of deal is it?</h2>
+        <h2 style="margin-bottom:18px;">CONFIGURE NEW ASSOCIATION</h2>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <label><input type="radio" name="dealType" value="New Deal"> New Deal</label>
           <label><input type="radio" name="dealType" value="Cross Sale"> Cross Sell</label>
-          <label><input type="radio" name="dealType" value="Renewal"> Renewal</label>
-          <label><input type="radio" name="dealType" value="Up Sale"> Renewal + Up sell</label>
+          <label><input type="radio" name="dealType" value="Renewal"> Renewal + Up sell</label>
+          <label><input type="radio" name="dealType" value="Up Sale"> Up Sell</label>
         </div>
         <div style="text-align:center;margin-top:24px;">
           <button id="continueBtn" type="button" style="background:#0078d4;color:#fff;border:none;border-radius:4px;padding:10px 36px;font-size:1.05rem;font-weight:600;cursor:pointer;opacity:0.5;transition:opacity 0.2s;" disabled>Continue</button>
         </div>
       </form>
       <div id="modulesPreview" style="max-width:900px;margin:32px auto 0 auto;padding:0 18px 18px 18px;">
-        <h3 style="font-size:1.08rem;color:#213343;margin-bottom:10px;">Appliances Overview</h3>
+        <h3 style="font-size:1.08rem;color:#213343;margin-bottom:10px;">ASSOCIATION OVERVIEW</h3>
         <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:18px 18px 0 18px;">
           <table style="width:100%;border-collapse:collapse;">
             <thead>
@@ -221,7 +221,7 @@
         </div>
       </div>
     </div>
-    <!-- Contenido principal oculto hasta selección -->
+    <!-- Main content hidden until selection -->
     <div id="mainContent" style="display:none;">
       <div class="main-grid">
         <div class="modules-panel">
@@ -240,13 +240,6 @@
         <button class="submit-btn" onclick="handleSubmit()">Submit</button>
         <button class="submit-btn" style="background:#bbb; color:#213343;" onclick="handleBack(event)">Back</button>
       </div>
-        // Botón de regresar
-        function handleBack(e) {
-          e.preventDefault();
-          document.getElementById('mainContent').style.display = 'none';
-          document.getElementById('dealStepContainer').style.display = '';
-          renderModulesPreview();
-        }
     </div>
   </div>
   <script>
@@ -260,16 +253,21 @@
       { id: 6, name: 'Module 6' }
     ];
     const appliances = [
-      { id: 'A', name: 'Appliance A', status: 'Active', modules: [1,2] },
-      { id: 'B', name: 'Appliance B', status: 'Active', modules: [3,4] },
-      { id: 'C', name: 'Appliance C', status: 'New', modules: [] },
-      { id: 'D', name: 'Appliance D', status: 'New', modules: [] }
+      { id: 'A', name: 'Appliance A', status: 'Active', modules: [1,2], dealType: 'Cross Sell' },
+      { id: 'B', name: 'Appliance B', status: 'Active', modules: [3,4], dealType: 'Up Sell' },
+      { id: 'C', name: 'Appliance C', status: 'New', modules: [], dealType: null },
+      { id: 'D', name: 'Appliance D', status: 'New', modules: [], dealType: null }
     ];
-    // Para rastrear módulos preexistentes en Up Sell
+    // Track pre-existing modules in Up Sell deals
     let preexistingModulesByAppliance = {};
+    
+    // Save original appliances state for preview table
+    const originalAppliances = JSON.parse(JSON.stringify(appliances));
+    // Working copy for main content area
+    let workingAppliances = JSON.parse(JSON.stringify(appliances));
 
     function getUnassignedModules() {
-      const assigned = new Set(appliances.flatMap(a => a.modules));
+      const assigned = new Set(workingAppliances.flatMap(a => a.modules));
       return modules.filter(m => !assigned.has(m.id));
     }
 
@@ -278,7 +276,7 @@
       const container = document.getElementById('availableModules');
       container.innerHTML = '';
       if (available.length === 0) {
-        container.innerHTML = '<div style="color:#888; margin-top:12px;">All modules are assigned</div>';
+        container.innerHTML = '<div style="color:#888; margin-top:12px;">All modules assigned</div>';
         return;
       }
       available.forEach(m => {
@@ -293,9 +291,9 @@
     function renderAppliances() {
       const container = document.getElementById('appliancesList');
       container.innerHTML = '';
-      // Detectar si estamos en Up Sell
+      // Check if we are in Up Sell deal
       const dealType = document.querySelector('input[name="dealType"]:checked')?.value;
-      appliances.forEach(a => {
+      workingAppliances.forEach(a => {
         const card = document.createElement('div');
         card.className = 'appliance-card';
         card.setAttribute('data-appliance-id', a.id);
@@ -323,14 +321,40 @@
           if (!m) return;
           const row = document.createElement('div');
           row.className = 'module-in-appliance';
-          row.textContent = m.name;
-          // En Up Sell, los módulos preexistentes no pueden eliminarse
+          
+          // Check if module is pre-existing in Renewal deal
           let isPreexisting = false;
           if ((dealType === 'Up Sale' || dealType === 'Renewal') && preexistingModulesByAppliance[a.id] && preexistingModulesByAppliance[a.id].includes(mid)) {
             isPreexisting = true;
           }
+          
+          // Create module name with label for Renewal deal
+          const nameSpan = document.createElement('span');
+          nameSpan.textContent = m.name;
+          row.appendChild(nameSpan);
+          
+          // Add label only for Renewal deals
+          if (dealType === 'Renewal') {
+            const label = document.createElement('span');
+            if (isPreexisting) {
+              label.textContent = 'Renewal';
+              label.style.background = '#e8f5e9';
+              label.style.color = '#2e7d32';
+            } else {
+              label.textContent = 'New';
+              label.style.background = '#fff3e0';
+              label.style.color = '#e65100';
+            }
+            label.style.padding = '2px 8px';
+            label.style.borderRadius = '4px';
+            label.style.fontSize = '0.85rem';
+            label.style.fontWeight = '600';
+            label.style.marginLeft = '8px';
+            row.appendChild(label);
+          }
+          
           if (!isPreexisting) {
-            // Remove button solo si no es preexistente
+            // Remove button only if not pre-existing
             const rmBtn = document.createElement('button');
             rmBtn.className = 'remove-btn';
             rmBtn.textContent = '×';
@@ -340,6 +364,50 @@
           modList.appendChild(row);
         });
         card.appendChild(modList);
+        
+        // Add "Do not renew" button only for Renewal deals on active appliances
+        if (dealType === 'Renewal' && a.status === 'Active' && preexistingModulesByAppliance[a.id] && preexistingModulesByAppliance[a.id].length > 0) {
+          const doNotRenewBtn = document.createElement('button');
+          doNotRenewBtn.textContent = 'Do not renew';
+          doNotRenewBtn.style.background = '#ffebee';
+          doNotRenewBtn.style.color = '#c62828';
+          doNotRenewBtn.style.border = '1px solid #ef5350';
+          doNotRenewBtn.style.borderRadius = '6px';
+          doNotRenewBtn.style.padding = '8px 16px';
+          doNotRenewBtn.style.fontSize = '0.95rem';
+          doNotRenewBtn.style.fontWeight = '600';
+          doNotRenewBtn.style.cursor = 'pointer';
+          doNotRenewBtn.style.marginBottom = '8px';
+          doNotRenewBtn.style.transition = 'background 0.15s, border 0.15s';
+          doNotRenewBtn.onmouseover = () => {
+            doNotRenewBtn.style.background = '#ffcdd2';
+          };
+          doNotRenewBtn.onmouseout = () => {
+            doNotRenewBtn.style.background = '#ffebee';
+          };
+          doNotRenewBtn.onclick = () => {
+            // Get pre-existing modules (Renewal) to remove completely
+            const preexistingModules = preexistingModulesByAppliance[a.id] || [];
+            
+            // Remove pre-existing modules from the global modules list
+            preexistingModules.forEach(mid => {
+              const moduleIndex = modules.findIndex(m => m.id === mid);
+              if (moduleIndex > -1) {
+                modules.splice(moduleIndex, 1);
+              }
+            });
+            
+            // Remove the appliance completely from the list
+            const applianceIndex = workingAppliances.findIndex(app => app.id === a.id);
+            if (applianceIndex > -1) {
+              workingAppliances.splice(applianceIndex, 1);
+            }
+            
+            renderAll();
+          };
+          card.appendChild(doNotRenewBtn);
+        }
+        
         // Add module button
         const addRow = document.createElement('div');
         addRow.className = 'add-module-row';
@@ -358,7 +426,7 @@
           alertDiv.style.borderRadius = '6px';
           alertDiv.style.padding = '8px 12px';
           alertDiv.style.marginTop = '8px';
-          alertDiv.textContent = 'No modules associated. Please add a module.';
+          alertDiv.textContent = 'No modules associated. Please add one.';
           card.appendChild(alertDiv);
         }
         container.appendChild(card);
@@ -380,11 +448,11 @@
         select.style.borderRadius = '6px';
         select.style.border = '1px solid #bbb';
         select.style.fontSize = '1rem';
-        select.innerHTML = '<option value="">Assign to appliance...</option>' +
-          appliances.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+        select.innerHTML = '<option value="">Assign to appliance</option>' +
+          originalAppliances.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
         select.onchange = function() {
           if (select.value) {
-            const a = appliances.find(a => a.id === select.value);
+            const a = workingAppliances.find(a => a.id === select.value);
             if (a) {
               a.modules.push(moduleId);
               renderAll();
@@ -409,12 +477,12 @@
         select.style.borderRadius = '6px';
         select.style.border = '1px solid #bbb';
         select.style.fontSize = '1rem';
-        select.innerHTML = '<option value="">Add module...</option>' +
+        select.innerHTML = '<option value="">Add module</option>' +
           available.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
         select.onchange = function() {
           if (select.value) {
             const m = available.find(m => m.id == select.value);
-            const a = appliances.find(a => a.id === applianceId);
+            const a = workingAppliances.find(a => a.id === applianceId);
             if (m && a) {
               a.modules.push(m.id);
               renderAll();
@@ -428,25 +496,40 @@
     }
 
     function removeModuleFromAppliance(applianceId, moduleId) {
-      const a = appliances.find(a => a.id === applianceId);
+      const a = workingAppliances.find(a => a.id === applianceId);
       if (!a) return;
       a.modules = a.modules.filter(mid => mid !== moduleId);
       renderAll();
     }
 
+    function handleBack(e) {
+      e.preventDefault();
+      workingAppliances = JSON.parse(JSON.stringify(originalAppliances));
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('dealStepContainer').style.display = '';
+      renderModulesPreview();
+    }
+
     function handleSubmit() {
-      // Visual feedback tipo HubSpot
-      const msg = document.createElement('div');
-      msg.textContent = 'Configuration saved!';
-      msg.style.background = '#e5f5f8';
-      msg.style.color = '#00a4bd';
-      msg.style.fontWeight = 'bold';
-      msg.style.textAlign = 'center';
-      msg.style.padding = '14px';
-      msg.style.borderRadius = '8px';
-      msg.style.margin = '0 0 18px 0';
-      document.querySelector('.container').insertBefore(msg, document.querySelector('.main-grid'));
-      setTimeout(() => msg.remove(), 1800);
+      // Validate that all modules are assigned and all appliances have at least one module
+      const unassignedModules = getUnassignedModules();
+      const appliancesWithoutModules = workingAppliances.filter(a => a.modules.length === 0);
+      
+      if (unassignedModules.length > 0) {
+        alert('Please assign all modules before submitting.');
+        return;
+      }
+      
+      if (appliancesWithoutModules.length > 0) {
+        alert('All appliances must have at least one module before submitting.');
+        return;
+      }
+      
+      // If validation passes, return to initial screen
+      workingAppliances = JSON.parse(JSON.stringify(originalAppliances));
+      document.getElementById('mainContent').style.display = 'none';
+      document.getElementById('dealStepContainer').style.display = '';
+      renderModulesPreview();
     }
 
     function renderAll() {
@@ -454,34 +537,57 @@
       renderAppliances();
     }
 
-    // Mostrar la pantalla principal solo si se hace clic en el botón continuar
+    // Show main screen only when continue button is clicked
     function showMainContent() {
       document.getElementById('dealStepContainer').style.display = 'none';
       document.getElementById('mainContent').style.display = '';
       renderAll();
     }
 
-    // Renderizar la tabla de modules
+    // Render the modules preview table
     function renderModulesPreview() {
       const tbody = document.getElementById('modulesPreviewBody');
       tbody.innerHTML = '';
-      // Mostrar los appliances y sus módulos asociados
+      // Display appliances and their associated modules
       appliances.forEach(appliance => {
         const modulesNames = appliance.modules.map(mid => {
           const m = modules.find(mm => mm.id === mid);
           return m ? m.name : '';
         }).filter(Boolean).join(', ') || '<span style="color:#888">None</span>';
-        // Status: configured si tiene módulos, pending si no
+        // Status: configured if it has modules, pending if not
         const status = appliance.modules.length > 0
           ? '<span style="background:#eafbe7;color:#1a7f37;padding:2px 10px;border-radius:6px;font-weight:600;">configured</span>'
           : '<span style="background:#fffbe7;color:#b88b00;padding:2px 10px;border-radius:6px;font-weight:600;">pending</span>';
-        // Deal type seleccionado
-        const dealType = document.querySelector('input[name="dealType"]:checked')?.value || '-';
+        // Deal type with styled label
+        let dealTypeLabel = '-';
+        let dealTypeStyle = 'color:#888;';
+        
+        // Use appliance's individual dealType if set, otherwise use form selection
+        const dealType = appliance.dealType || document.querySelector('input[name="dealType"]:checked')?.value;
+        
+        if (dealType === 'New Deal') {
+          dealTypeLabel = 'New Deal';
+          dealTypeStyle = 'background:#e3f2fd;color:#1565c0;padding:2px 10px;border-radius:6px;font-weight:600;';
+        } else if (dealType === 'Cross Sell' || dealType === 'Cross Sale') {
+          dealTypeLabel = 'Cross Sell';
+          dealTypeStyle = 'background:#f3e5f5;color:#6a1b9a;padding:2px 10px;border-radius:6px;font-weight:600;';
+        } else if (dealType === 'Renewal') {
+          dealTypeLabel = 'Renewal';
+          dealTypeStyle = 'background:#e8f5e9;color:#2e7d32;padding:2px 10px;border-radius:6px;font-weight:600;';
+        } else if (dealType === 'Up Sell' || dealType === 'Up Sale') {
+          dealTypeLabel = 'Up Sell';
+          dealTypeStyle = 'background:#fff3e0;color:#e65100;padding:2px 10px;border-radius:6px;font-weight:600;';
+        }
+        
+        const dealTypeHtml = dealTypeLabel !== '-' 
+          ? `<span style="${dealTypeStyle}">${dealTypeLabel}</span>`
+          : '-';
+        
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${appliance.name}</td>
           <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${modulesNames}</td>
-          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${dealType}</td>
+          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${dealTypeHtml}</td>
           <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${status}</td>
         `;
         tbody.appendChild(tr);
@@ -502,16 +608,19 @@
 
     continueBtn.addEventListener('click', function() {
       const selectedDeal = document.querySelector('input[name="dealType"]:checked')?.value;
+      // Reset working appliances to original state
+      workingAppliances = JSON.parse(JSON.stringify(originalAppliances));
+      
       if (selectedDeal === 'New Deal' || selectedDeal === 'Cross Sale') {
-        // Vaciar todos los módulos asignados y poner todos los appliances como 'New'
-        appliances.forEach(a => {
+        // Clear all modules assigned and set all appliances as 'New'
+        workingAppliances.forEach(a => {
           a.modules = [];
           a.status = 'New';
         });
         preexistingModulesByAppliance = {};
       } else if (selectedDeal === 'Up Sale' || selectedDeal === 'Renewal') {
-        // Ejemplo: preasignar los dos primeros módulos al primer appliance, el resto disponibles
-        appliances.forEach((a, idx) => {
+        // Example: pre-assign some modules to the first appliances, leaving others available
+        workingAppliances.forEach((a, idx) => {
           if (idx === 0) {
             a.modules = [modules[0].id, modules[1].id];
             a.status = 'Active';
@@ -523,9 +632,9 @@
             a.status = 'New';
           }
         });
-        // Guardar snapshot de preexistentes
+        // Save snapshot of pre-existing
         preexistingModulesByAppliance = {};
-        appliances.forEach(a => {
+        workingAppliances.forEach(a => {
           preexistingModulesByAppliance[a.id] = [...a.modules];
         });
       } else {
