@@ -326,7 +326,7 @@
           row.textContent = m.name;
           // En Up Sell, los módulos preexistentes no pueden eliminarse
           let isPreexisting = false;
-          if (dealType === 'Up Sale' && preexistingModulesByAppliance[a.id] && preexistingModulesByAppliance[a.id].includes(mid)) {
+          if ((dealType === 'Up Sale' || dealType === 'Renewal') && preexistingModulesByAppliance[a.id] && preexistingModulesByAppliance[a.id].includes(mid)) {
             isPreexisting = true;
           }
           if (!isPreexisting) {
@@ -509,7 +509,7 @@
           a.status = 'New';
         });
         preexistingModulesByAppliance = {};
-      } else if (selectedDeal === 'Up Sale') {
+      } else if (selectedDeal === 'Up Sale' || selectedDeal === 'Renewal') {
         // Ejemplo: preasignar los dos primeros módulos al primer appliance, el resto disponibles
         appliances.forEach((a, idx) => {
           if (idx === 0) {
