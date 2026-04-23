@@ -1980,7 +1980,14 @@
 			document.body.style.overflow = "";
 		}
 
-		openButton.addEventListener("click", openModal);
+		openButton.addEventListener("click", function() {
+			// Recargar el iframe cada vez que se abre el modal
+			const modalFrame = document.getElementById("modalContentFrame");
+			if (modalFrame) {
+				modalFrame.src = modalFrame.src;
+			}
+			openModal();
+		});
 		closeButton.addEventListener("click", closeModal);
 
 		modal.addEventListener("click", (event) => {

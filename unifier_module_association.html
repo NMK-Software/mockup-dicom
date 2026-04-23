@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unifier-Module Association</title>
+  <title>Appliance-Module Association</title>
   <style>
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -109,13 +109,13 @@
       font-size: 0.98rem;
       color: #555;
     }
-    .modules-in-unifier {
+    .modules-in-appliance {
       display: flex;
       flex-direction: column;
       gap: 7px;
       margin-bottom: 6px;
     }
-    .module-in-unifier {
+    .module-in-appliance {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -188,21 +188,57 @@
 </head>
 <body>
   <div class="container">
-    <div class="main-grid">
-      <div class="modules-panel">
-        <div><strong>Modules from Current Deal</strong></div>
-        <div class="modules-list" id="availableModules">
-          <!-- Modules not assigned to any unifier will appear here -->
+    <!-- Paso previo: Selección de tipo de deal y tabla de modules en un solo contenedor -->
+    <div id="dealStepContainer">
+      <form id="dealTypeForm" style="max-width:400px;margin:32px auto 0 auto;padding:24px 28px 18px 28px;border:1px solid #bbb;border-radius:8px;background:#f7fafd;">
+        <h2 style="margin-bottom:18px;">What type of deal is it?</h2>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <label><input type="radio" name="dealType" value="New Deal"> New Deal</label>
+          <label><input type="radio" name="dealType" value="Cross Sale"> Cross Sale</label>
+          <label><input type="radio" name="dealType" value="Renewal"> Renewal</label>
+          <label><input type="radio" name="dealType" value="Up Sale"> Up Sell</label>
         </div>
-      </div>
-      <div class="unifiers-panel">
-        <div class="unifiers-list" id="unifiersList">
-          <!-- Unifier cards will be rendered here -->
+        <div style="text-align:center;margin-top:24px;">
+          <button id="continueBtn" type="button" style="background:#0078d4;color:#fff;border:none;border-radius:4px;padding:10px 36px;font-size:1.05rem;font-weight:600;cursor:pointer;opacity:0.5;transition:opacity 0.2s;" disabled>Continue</button>
+        </div>
+      </form>
+      <div id="modulesPreview" style="max-width:900px;margin:32px auto 0 auto;padding:0 18px 18px 18px;">
+        <h3 style="font-size:1.08rem;color:#213343;margin-bottom:10px;">Appliances Overview</h3>
+        <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:18px 18px 0 18px;">
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f7fafd;">
+                <th style="text-align:left;padding:8px 6px;font-size:0.98rem;color:#213343;border-bottom:1px solid #e0e0e0;">Appliance name</th>
+                <th style="text-align:left;padding:8px 6px;font-size:0.98rem;color:#213343;border-bottom:1px solid #e0e0e0;">Associated modules</th>
+                <th style="text-align:left;padding:8px 6px;font-size:0.98rem;color:#213343;border-bottom:1px solid #e0e0e0;">Deal type</th>
+                <th style="text-align:left;padding:8px 6px;font-size:0.98rem;color:#213343;border-bottom:1px solid #e0e0e0;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="modulesPreviewBody">
+              <!-- Rows will be rendered by JS -->
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
-    <div class="submit-row">
-      <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+    <!-- Contenido principal oculto hasta selección -->
+    <div id="mainContent" style="display:none;">
+      <div class="main-grid">
+        <div class="modules-panel">
+          <div><strong>Modules from Current Deal</strong></div>
+          <div class="modules-list" id="availableModules">
+            <!-- Modules not assigned to any appliance will appear here -->
+          </div>
+        </div>
+        <div class="appliances-panel">
+          <div class="appliances-list" id="appliancesList">
+            <!-- Appliance cards will be rendered here -->
+          </div>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+      </div>
     </div>
   </div>
   <script>
@@ -215,15 +251,15 @@
       { id: 5, name: 'Module 5' },
       { id: 6, name: 'Module 6' }
     ];
-    const unifiers = [
-      { id: 'A', name: 'Unifier A', status: 'Active', modules: [1,2] },
-      { id: 'B', name: 'Unifier B', status: 'Active', modules: [3,4] },
-      { id: 'C', name: 'Unifier C', status: 'New', modules: [] },
-      { id: 'D', name: 'Unifier D', status: 'New', modules: [] }
+    const appliances = [
+      { id: 'A', name: 'Appliance A', status: 'Active', modules: [1,2] },
+      { id: 'B', name: 'Appliance B', status: 'Active', modules: [3,4] },
+      { id: 'C', name: 'Appliance C', status: 'New', modules: [] },
+      { id: 'D', name: 'Appliance D', status: 'New', modules: [] }
     ];
 
     function getUnassignedModules() {
-      const assigned = new Set(unifiers.flatMap(u => u.modules));
+      const assigned = new Set(appliances.flatMap(a => a.modules));
       return modules.filter(m => !assigned.has(m.id));
     }
 
@@ -244,43 +280,43 @@
       });
     }
 
-    function renderUnifiers() {
-      const container = document.getElementById('unifiersList');
+    function renderAppliances() {
+      const container = document.getElementById('appliancesList');
       container.innerHTML = '';
-      unifiers.forEach(u => {
+      appliances.forEach(a => {
         const card = document.createElement('div');
-        card.className = 'unifier-card';
-        card.setAttribute('data-unifier-id', u.id);
+        card.className = 'appliance-card';
+        card.setAttribute('data-appliance-id', a.id);
         // Title
         const title = document.createElement('div');
-        title.className = 'unifier-title';
-        title.textContent = u.name;
+        title.className = 'appliance-title';
+        title.textContent = a.name;
         card.appendChild(title);
         // Status
         const statusRow = document.createElement('div');
         statusRow.className = 'status-row';
         const dot = document.createElement('span');
-        dot.className = 'status-dot ' + (u.status.toLowerCase());
+        dot.className = 'status-dot ' + (a.status.toLowerCase());
         statusRow.appendChild(dot);
         const statusLabel = document.createElement('span');
         statusLabel.className = 'status-label';
-        statusLabel.textContent = 'Status: ' + u.status;
+        statusLabel.textContent = 'Status: ' + a.status;
         statusRow.appendChild(statusLabel);
         card.appendChild(statusRow);
-        // Modules in unifier
+        // Modules in appliance
         const modList = document.createElement('div');
-        modList.className = 'modules-in-unifier';
-        u.modules.forEach(mid => {
+        modList.className = 'modules-in-appliance';
+        a.modules.forEach(mid => {
           const m = modules.find(mm => mm.id === mid);
           if (!m) return;
           const row = document.createElement('div');
-          row.className = 'module-in-unifier';
+          row.className = 'module-in-appliance';
           row.textContent = m.name;
           // Remove button
           const rmBtn = document.createElement('button');
           rmBtn.className = 'remove-btn';
           rmBtn.textContent = '×';
-          rmBtn.onclick = () => removeModuleFromUnifier(u.id, m.id);
+          rmBtn.onclick = () => removeModuleFromAppliance(a.id, m.id);
           row.appendChild(rmBtn);
           modList.appendChild(row);
         });
@@ -291,11 +327,11 @@
         const addBtn = document.createElement('button');
         addBtn.className = 'add-module-btn';
         addBtn.textContent = 'Add module ＋';
-        addBtn.onclick = () => showAddModuleMenu(null, u.id);
+        addBtn.onclick = () => showAddModuleMenu(null, a.id);
         addRow.appendChild(addBtn);
         card.appendChild(addRow);
         // Alert if no modules associated
-        if (u.modules.length === 0) {
+        if (a.modules.length === 0) {
           const alertDiv = document.createElement('div');
           alertDiv.style.color = '#a00a5c';
           alertDiv.style.background = '#fff3f6';
@@ -310,11 +346,11 @@
       });
     }
 
-    // Render a select dropdown for assigning a module to a unifier
-    function showAddModuleMenu(moduleId = null, unifierId = null) {
+    // Render a select dropdown for assigning a module to an appliance
+    function showAddModuleMenu(moduleId = null, applianceId = null) {
       // Remove any previous select menus
       document.querySelectorAll('.assign-select-row').forEach(e => e.remove());
-      // If moduleId is provided, show a select to pick a unifier
+      // If moduleId is provided, show a select to pick an appliance
       if (moduleId !== null) {
         const container = document.getElementById('availableModules');
         const selectRow = document.createElement('div');
@@ -325,13 +361,13 @@
         select.style.borderRadius = '6px';
         select.style.border = '1px solid #bbb';
         select.style.fontSize = '1rem';
-        select.innerHTML = '<option value="">Assign to unifier...</option>' +
-          unifiers.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+        select.innerHTML = '<option value="">Assign to appliance...</option>' +
+          appliances.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
         select.onchange = function() {
           if (select.value) {
-            const u = unifiers.find(u => u.id === select.value);
-            if (u) {
-              u.modules.push(moduleId);
+            const a = appliances.find(a => a.id === select.value);
+            if (a) {
+              a.modules.push(moduleId);
               renderAll();
             }
           }
@@ -341,10 +377,10 @@
         select.focus();
         return;
       }
-      // If unifierId is provided, show a select to pick a module
-      if (unifierId !== null) {
+      // If applianceId is provided, show a select to pick a module
+      if (applianceId !== null) {
         const available = getUnassignedModules();
-        const card = document.querySelector(`.unifier-card[data-unifier-id="${unifierId}"]`);
+        const card = document.querySelector(`.appliance-card[data-appliance-id="${applianceId}"]`);
         if (!card) return;
         const selectRow = document.createElement('div');
         selectRow.className = 'assign-select-row';
@@ -359,9 +395,9 @@
         select.onchange = function() {
           if (select.value) {
             const m = available.find(m => m.id == select.value);
-            const u = unifiers.find(u => u.id === unifierId);
-            if (m && u) {
-              u.modules.push(m.id);
+            const a = appliances.find(a => a.id === applianceId);
+            if (m && a) {
+              a.modules.push(m.id);
               renderAll();
             }
           }
@@ -372,10 +408,10 @@
       }
     }
 
-    function removeModuleFromUnifier(unifierId, moduleId) {
-      const u = unifiers.find(u => u.id === unifierId);
-      if (!u) return;
-      u.modules = u.modules.filter(mid => mid !== moduleId);
+    function removeModuleFromAppliance(applianceId, moduleId) {
+      const a = appliances.find(a => a.id === applianceId);
+      if (!a) return;
+      a.modules = a.modules.filter(mid => mid !== moduleId);
       renderAll();
     }
 
@@ -396,10 +432,58 @@
 
     function renderAll() {
       renderModulesList();
-      renderUnifiers();
+      renderAppliances();
     }
 
-    renderAll();
+    // Mostrar la pantalla principal solo si se hace clic en el botón continuar
+    function showMainContent() {
+      document.getElementById('dealStepContainer').style.display = 'none';
+      document.getElementById('mainContent').style.display = '';
+      renderAll();
+    }
+
+    // Renderizar la tabla de modules
+    function renderModulesPreview() {
+      const tbody = document.getElementById('modulesPreviewBody');
+      tbody.innerHTML = '';
+      // Mostrar los appliances y sus módulos asociados
+      appliances.forEach(appliance => {
+        const modulesNames = appliance.modules.map(mid => {
+          const m = modules.find(mm => mm.id === mid);
+          return m ? m.name : '';
+        }).filter(Boolean).join(', ') || '<span style="color:#888">None</span>';
+        // Status: configured si tiene módulos, pending si no
+        const status = appliance.modules.length > 0
+          ? '<span style="background:#eafbe7;color:#1a7f37;padding:2px 10px;border-radius:6px;font-weight:600;">configured</span>'
+          : '<span style="background:#fffbe7;color:#b88b00;padding:2px 10px;border-radius:6px;font-weight:600;">pending</span>';
+        // Deal type seleccionado
+        const dealType = document.querySelector('input[name="dealType"]:checked')?.value || '-';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${appliance.name}</td>
+          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${modulesNames}</td>
+          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${dealType}</td>
+          <td style="padding:8px 6px;border-bottom:1px solid #f0f0f0;">${status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Mostrar tabla de modules preview siempre
+    renderModulesPreview();
+
+    // Habilitar el botón continuar solo si se selecciona un tipo de deal
+    const continueBtn = document.getElementById('continueBtn');
+    document.querySelectorAll('input[name="dealType"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        continueBtn.disabled = false;
+        continueBtn.style.opacity = '1';
+      });
+    });
+
+    continueBtn.addEventListener('click', function() {
+      showMainContent();
+    });
   </script>
 </body>
 </html>
