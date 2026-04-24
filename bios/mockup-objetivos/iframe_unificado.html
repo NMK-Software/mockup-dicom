@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>KPIs y Objetivos 2026</title>
+	<style>
+		/* ========== CSS COMÚN ========== */
+		:root {
+			--page: #f4f7fb;
+			--card: #ffffff;
+			--header: #f7f9fc;
+			--line: #d9e3ee;
+			--line-strong: #b7d4f4;
+			--text: #173a63;
+			--text-soft: #6e8aa7;
+			--text-muted: #a6b7c7;
+			--green: #006c67;
+			--shadow: 0 18px 44px rgba(23, 58, 99, 0.08);
+			--radius: 22px;
+			--bg: #f6f9fc;
+			--panel: rgba(255, 255, 255, 0.96);
+			--panel-strong: #ffffff;
+			--line: #dfe3eb;
+			--line-strong: #cbd6e2;
+			--muted: #6b7c93;
+			--brand: #ff7a59;
+			--brand-dark: #e66a4a;
+			--accent: #00a4bd;
+			--accent-soft: #eaf0f6;
+			--ok: #00bda5;
+			--warn: #ff8f59;
+			--blocked: #f2545b;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			margin: 0;
+			min-height: 100%;
+			font-family: "Segoe UI", Aptos, sans-serif;
+			background: linear-gradient(180deg, #f6f9fc 0%, #edf3f9 100%);
+			color: var(--text);
+		}
+
+		body {
+			padding: 0;
+		}
+
+		/* ========== MODO STANDALONE ========== */
+		body.is-standalone {
+			background: linear-gradient(180deg, #f6f9fc 0%, #edf3f9 100%);
+			padding: 32px 0;
+		}
+
+		.page-wrapper {
+			display: none;
+		}
+
+		body.is-standalone .page-wrapper {
+			display: block;
+			max-width: 1280px;
+			margin: 0 auto;
+			padding: 0 32px;
+		}
+
+		body.is-standalone .page-header {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			margin-bottom: 24px;
+		}
+
+		body.is-standalone .page-title {
+			margin: 0;
+			font-size: 1.4rem;
+			font-weight: 800;
+			color: var(--text);
+			letter-spacing: -0.01em;
+		}
+
+		body.is-standalone .page-subtitle {
+			margin: 4px 0 0;
+			font-size: 0.9rem;
+			color: var(--text-soft);
+		}
+
+		body.is-standalone .page-badge {
+			display: inline-flex;
+			align-items: center;
+			padding: 5px 12px;
+			border-radius: 999px;
+			background: rgba(0, 164, 189, 0.1);
+			border: 1px solid rgba(0, 164, 189, 0.25);
+			color: var(--accent);
+			font-size: 0.8rem;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+		}
+
+		body.is-standalone .tabs-container {
+			width: min(1280px, calc(100% - 64px));
+			margin: 0 auto;
+			border-radius: 16px;
+			box-shadow: 0 18px 44px rgba(23, 58, 99, 0.1);
+			overflow: hidden;
+			border: 1px solid var(--line);
+		}
+
+		body.is-standalone .tabs-header {
+			padding: 0 8px;
+		}
+
+		/* ========== TABS ========== */
+		.tabs-container {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			background: #ffffff;
+		}
+
+		.tabs-header {
+			display: flex;
+			border-bottom: 2px solid var(--line);
+			background: #ffffff;
+		}
+
+		.tab-button {
+			padding: 14px 28px;
+			border: none;
+			background: transparent;
+			cursor: pointer;
+			font-size: 1rem;
+			font-weight: 600;
+			color: var(--text-soft);
+			transition: all 140ms ease;
+			position: relative;
+			border-bottom: 3px solid transparent;
+			margin-bottom: -2px;
+		}
+
+		.tab-button:hover {
+			color: var(--text);
+			background: rgba(0, 0, 0, 0.02);
+		}
+
+		.tab-button.active {
+			color: var(--brand);
+			border-bottom-color: var(--brand);
+		}
+
+		.tabs-content {
+			flex: 1;
+		}
+
+		.tab-panel {
+			display: none;
+			animation: fadeIn 200ms ease-in;
+		}
+
+		.tab-panel.active {
+			display: block;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		/* ========== KPI STYLES ========== */
+		.frame {
+			width: 100%;
+			padding: 0;
+		}
+
+		.card {
+			background: var(--card);
+			border-radius: 0 0 var(--radius) var(--radius);
+			box-shadow: var(--shadow);
+			overflow: hidden;
+			border: 1px solid rgba(183, 212, 244, 0.45);
+		}
+
+		.table-wrap {
+			overflow-x: auto;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 0;
+			min-width: 1040px;
+		}
+
+		thead th {
+			padding: 14px 14px 12px;
+			background: var(--header);
+			border-bottom: 1px solid var(--line);
+			font-size: 0.92rem;
+			font-weight: 800;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: #195184;
+			text-align: center;
+		}
+
+		thead th:first-child {
+			text-align: left;
+			min-width: 290px;
+			padding-left: 16px;
+		}
+
+		thead th.meta-split,
+		tbody td.meta-split {
+			border-left: 2px solid var(--line-strong);
+		}
+
+		thead th.general {
+			color: var(--green);
+		}
+
+		.header-stack {
+			display: grid;
+			gap: 2px;
+			justify-items: center;
+		}
+
+		.header-stack span:last-child {
+			font-size: 0.66rem;
+			font-weight: 500;
+			letter-spacing: 0.08em;
+			color: var(--text-soft);
+		}
+
+		tbody td {
+			padding: 12px 12px;
+			border-bottom: 1px solid var(--line);
+			font-size: 0.92rem;
+			line-height: 1.2;
+			text-align: center;
+			color: #153f68;
+			background: #ffffff;
+		}
+
+		tbody tr:last-child td {
+			border-bottom: 0;
+		}
+
+		tbody td:first-child {
+			text-align: left;
+			padding-left: 16px;
+			font-size: 0.92rem;
+		}
+
+		tbody tr.category-row td {
+			padding: 9px 16px;
+			background: linear-gradient(90deg, #edf4fb 0%, #f8fbff 100%);
+			border-top: 1px solid #c9dbef;
+			border-bottom: 1px solid #c9dbef;
+			font-size: 0.74rem;
+			font-weight: 800;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+			color: #35638f;
+			text-align: left;
+		}
+
+		.kpi-name {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			font-size: 0.92rem;
+			font-weight: 500;
+			color: #0f3257;
+		}
+
+		.kpi-name::before {
+			content: "";
+			width: 5px;
+			height: 5px;
+			border-radius: 50%;
+			background: #c2ceda;
+			flex: 0 0 auto;
+		}
+
+		.goal-quarter,
+		.goal-general {
+			font-weight: 800;
+		}
+
+		.goal-quarter {
+			color: #0f4f87;
+		}
+
+		.goal-general {
+			color: var(--green);
+		}
+
+		.footer-note {
+			padding: 12px 18px 14px;
+			border-top: 1px solid var(--line);
+			background: linear-gradient(180deg, rgba(247, 249, 252, 0.7), rgba(244, 247, 251, 0.92));
+			font-size: 0.8rem;
+			font-style: italic;
+			color: var(--text-muted);
+		}
+
+		/* ========== OBJETIVOS STYLES ========== */
+		.app {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			display: grid;
+			gap: 10px;
+		}
+
+		.topbar {
+			display: grid;
+			grid-template-columns: auto 1fr auto auto;
+			gap: 8px;
+			align-items: center;
+			padding: 8px 0 4px;
+		}
+
+		.topbar-spacer {
+			min-width: 0;
+		}
+
+		.topbar-note {
+			color: var(--muted);
+			font-size: 0.84rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.topbar-actions {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+		}
+
+		.hero-actions,
+		.toolbar,
+		.category-actions,
+		.mini-actions {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		button {
+			border: 1px solid transparent;
+			border-radius: 999px;
+			padding: 8px 13px;
+			font: inherit;
+			cursor: pointer;
+			transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease, border-color 140ms ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+		}
+
+		.button-primary {
+			background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+			color: #ffffff;
+			box-shadow: 0 10px 22px rgba(255, 122, 89, 0.26);
+		}
+
+		.button-secondary {
+			background: #ffffff;
+			color: var(--text);
+			border-color: var(--line);
+		}
+
+		.button-ghost {
+			padding: 6px 10px;
+			background: #f5f8fa;
+			color: var(--accent);
+			border: 1px dashed var(--line-strong);
+			font-size: 0.84rem;
+		}
+
+		.mode-switch {
+			display: inline-flex;
+			padding: 4px;
+			border-radius: 999px;
+			background: #f5f8fa;
+			border: 1px solid var(--line);
+			gap: 4px;
+		}
+
+		.mode-button {
+			padding: 7px 12px;
+			background: transparent;
+			color: var(--muted);
+		}
+
+		.mode-button.is-active {
+			background: #ffffff;
+			color: var(--text);
+			border-color: var(--line);
+			box-shadow: 0 4px 14px rgba(51, 71, 91, 0.08);
+		}
+
+		.board {
+			display: grid;
+			gap: 10px;
+		}
+
+		.toolbar {
+			justify-content: space-between;
+			padding: 0;
+		}
+
+		.toolbar-left,
+		.toolbar-right {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.toolbar-note {
+			color: var(--muted);
+			font-size: 0.82rem;
+		}
+
+		.category-card {
+			background: transparent;
+			border: 0;
+			border-radius: 0;
+			box-shadow: none;
+			overflow: hidden;
+			animation: fadeUp 260ms ease both;
+		}
+
+		.category-header {
+			display: grid;
+			grid-template-columns: minmax(180px, 250px) 1fr auto;
+			gap: 10px;
+			align-items: center;
+			padding: 10px 12px;
+			border-bottom: 1px solid var(--line);
+			background: linear-gradient(90deg, rgba(234, 240, 246, 0.9), rgba(255, 255, 255, 0.88));
+		}
+
+		.category-ribbon {
+			align-self: stretch;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-transform: uppercase;
+			letter-spacing: 0.22em;
+			font-weight: 800;
+			border-radius: 10px;
+			min-height: 44px;
+			padding: 8px 12px;
+			color: var(--accent);
+			background: linear-gradient(135deg, rgba(0, 164, 189, 0.12), rgba(234, 240, 246, 0.95));
+			border: 1px solid rgba(0, 164, 189, 0.16);
+			text-align: center;
+		}
+
+		.category-ribbon.is-editable {
+			padding: 6px;
+		}
+
+		.category-title-input {
+			width: 100%;
+			border: 1px solid rgba(255, 122, 89, 0.28);
+			background: rgba(255, 255, 255, 0.96);
+			color: var(--accent);
+			border-radius: 8px;
+			padding: 10px 12px;
+			font: inherit;
+			font-size: 0.92rem;
+			font-weight: 800;
+			letter-spacing: 0.16em;
+			text-transform: uppercase;
+			text-align: center;
+		}
+
+		.category-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+		}
+
+		.pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.92);
+			border: 1px solid var(--line);
+			color: var(--muted);
+			font-size: 0.8rem;
+		}
+
+		thead th {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			background: rgba(245, 248, 250, 0.98);
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			font-size: 0.74rem;
+			color: var(--muted);
+		}
+
+		th,
+		td {
+			border: 1px solid var(--line);
+			padding: 0;
+			vertical-align: top;
+		}
+
+		td {
+			background: rgba(255, 255, 255, 0.92);
+		}
+
+		td.objective-cell,
+		td.milestone-cell {
+			background: rgba(245, 248, 250, 0.96);
+		}
+
+		.cell {
+			display: grid;
+			gap: 6px;
+			padding: 8px;
+			min-height: 58px;
+		}
+
+		.cell-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.cell-label {
+			font-size: 0.66rem;
+			text-transform: uppercase;
+			letter-spacing: 0.12em;
+			color: #7c98b6;
+			font-weight: 700;
+		}
+
+		.cell textarea,
+		.cell input,
+		.cell select {
+			width: 100%;
+			border: 1px solid var(--line);
+			background: #ffffff;
+			color: var(--text);
+			border-radius: 10px;
+			padding: 8px 10px;
+			font: inherit;
+			resize: vertical;
+			min-height: 36px;
+			transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+			font-size: 0.9rem;
+		}
+
+		.cell input {
+			min-height: 34px;
+		}
+
+		.cell textarea:focus,
+		.cell input:focus,
+		.cell select:focus {
+			outline: 0;
+			border-color: rgba(242, 84, 91, 0.62);
+			box-shadow: 0 0 0 4px rgba(242, 84, 91, 0.16);
+			background: #ffffff;
+		}
+
+		.category-title-input:focus {
+			outline: 0;
+			border-color: rgba(242, 84, 91, 0.72);
+			box-shadow: 0 0 0 4px rgba(242, 84, 91, 0.18);
+			background: #ffffff;
+		}
+
+		.read-value,
+		.read-status,
+		.read-progress {
+			border: 1px solid transparent;
+			border-radius: 10px;
+			background: transparent;
+			padding: 4px 0;
+			line-height: 1.4;
+			min-height: 20px;
+			font-size: 0.9rem;
+		}
+
+		.read-value.is-empty {
+			color: #9aa9b8;
+			font-style: italic;
+		}
+
+		.read-status {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 6px 10px;
+			font-weight: 700;
+			border-radius: 999px;
+		}
+
+		.read-progress {
+			display: grid;
+			gap: 8px;
+		}
+
+		.progress-bar {
+			height: 8px;
+			border-radius: 999px;
+			background: #eaf0f6;
+			overflow: hidden;
+		}
+
+		.progress-bar > span {
+			display: block;
+			height: 100%;
+			border-radius: inherit;
+			background: linear-gradient(90deg, var(--accent), var(--brand));
+		}
+
+		.cell textarea {
+			field-sizing: content;
+		}
+
+		.status-select {
+			font-weight: 700;
+		}
+
+		.status-estancado {
+			color: var(--blocked);
+			background: rgba(154, 50, 50, 0.08);
+		}
+
+		.status-en-curso {
+			color: var(--warn);
+			background: rgba(183, 119, 25, 0.1);
+		}
+
+		.status-cumplido {
+			color: var(--ok);
+			background: rgba(35, 112, 77, 0.1);
+		}
+
+		.progress-box {
+			display: grid;
+			gap: 10px;
+			min-width: 140px;
+		}
+
+		.progress-value {
+			font-weight: 800;
+			font-size: 1rem;
+			letter-spacing: -0.03em;
+		}
+
+		.progress-track {
+			appearance: none;
+			width: 100%;
+			height: 7px;
+			border-radius: 999px;
+			background: linear-gradient(90deg, rgba(0, 164, 189, 0.2), rgba(255, 122, 89, 0.26));
+			outline: none;
+		}
+
+		.progress-track::-webkit-slider-thumb {
+			appearance: none;
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+			border: 0;
+			box-shadow: 0 4px 12px rgba(255, 122, 89, 0.32);
+			cursor: pointer;
+		}
+
+		.progress-track::-moz-range-thumb {
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+			border: 0;
+			box-shadow: 0 4px 12px rgba(255, 122, 89, 0.32);
+			cursor: pointer;
+		}
+
+		body[data-mode="read"] .edit-only {
+			display: none !important;
+		}
+
+		.empty-state {
+			padding: 14px;
+			text-align: center;
+			color: var(--muted);
+			background: rgba(255, 251, 244, 0.9);
+		}
+
+		.mobile-objectives {
+			display: grid;
+			gap: 12px;
+			padding: 10px;
+		}
+
+		.objective-mobile-card {
+			border: 1px solid var(--line);
+			border-radius: 12px;
+			background: #ffffff;
+			overflow: hidden;
+		}
+
+		.mobile-block-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 8px;
+			padding: 10px 12px;
+			background: linear-gradient(90deg, rgba(234, 240, 246, 0.9), rgba(255, 255, 255, 0.96));
+			border-bottom: 1px solid var(--line);
+		}
+
+		.mobile-block-title {
+			font-size: 0.78rem;
+			text-transform: uppercase;
+			letter-spacing: 0.1em;
+			font-weight: 800;
+			color: #55708d;
+		}
+
+		.mobile-block-content {
+			display: grid;
+			gap: 8px;
+			padding: 10px;
+		}
+
+		.mobile-field {
+			display: grid;
+			gap: 4px;
+		}
+
+		.mobile-field > span {
+			font-size: 0.68rem;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			font-weight: 700;
+			color: #7c98b6;
+		}
+
+		.mobile-milestone {
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			overflow: hidden;
+			background: #fbfdff;
+		}
+
+		.mobile-task-list {
+			display: grid;
+			gap: 8px;
+			padding: 8px;
+		}
+
+		.mobile-task {
+			border: 1px solid var(--line);
+			border-radius: 10px;
+			background: #ffffff;
+			overflow: hidden;
+		}
+
+		.mobile-task .mobile-block-header {
+			padding: 8px 10px;
+			background: #f8fbff;
+		}
+
+		@keyframes fadeUp {
+			from {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 900px) {
+			body {
+				background: #f3f7fb;
+			}
+
+			#kpis thead th,
+			#kpis tbody td {
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+
+			#kpis table {
+				min-width: 760px;
+			}
+
+			.app {
+				padding: 8px;
+			}
+
+			.category-header {
+				padding: 10px;
+				grid-template-columns: 1fr;
+			}
+
+			.topbar,
+			.category-header {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 640px) {
+			body.is-standalone .page-wrapper {
+				padding: 0 12px;
+			}
+
+			body.is-standalone .tabs-container {
+				width: calc(100% - 24px);
+			}
+
+			.topbar,
+			.toolbar {
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			.topbar-actions,
+			.toolbar-left,
+			.toolbar-right,
+			.category-actions {
+				width: 100%;
+			}
+
+			button {
+				width: 100%;
+				justify-content: center;
+			}
+
+			.tabs-header {
+				flex-wrap: wrap;
+			}
+
+			.tab-button {
+				flex: 1;
+				min-width: 120px;
+				padding: 12px 16px;
+			}
+
+			.mobile-objectives {
+				padding: 8px;
+			}
+
+			.mobile-block-content,
+			.mobile-task-list {
+				padding: 8px;
+			}
+		}
+
+		@media (max-width: 760px) {
+			#kpis .table-wrap {
+				overflow: visible;
+			}
+
+			#kpis table {
+				width: 100%;
+				min-width: 0;
+				display: block;
+			}
+
+			#kpis thead {
+				display: none;
+			}
+
+			#kpis tbody {
+				display: block;
+				padding: 10px;
+			}
+
+			#kpis tbody tr {
+				display: block;
+				margin: 0 0 10px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				overflow: hidden;
+				background: #ffffff;
+			}
+
+			#kpis tbody tr.category-row {
+				margin: 14px 0 6px;
+				border: 0;
+				border-radius: 0;
+				background: transparent;
+			}
+
+			#kpis tbody tr.category-row td {
+				border-radius: 10px;
+				border: 1px solid #c9dbef;
+				border-bottom: 1px solid #c9dbef;
+				padding: 10px 12px;
+			}
+
+			#kpis tbody td {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 12px;
+				padding: 9px 12px;
+				text-align: right;
+				border-bottom: 1px solid var(--line);
+			}
+
+			#kpis tbody tr:not(.category-row) td::before {
+				content: attr(data-label);
+				font-size: 0.68rem;
+				line-height: 1.1;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				font-weight: 700;
+				color: var(--text-soft);
+				text-align: left;
+				flex: 1;
+			}
+
+			#kpis tbody tr:not(.category-row) td:first-child {
+				background: #f8fbff;
+				font-weight: 700;
+			}
+
+			#kpis tbody tr:not(.category-row) td:first-child::before {
+				color: #35638f;
+			}
+
+			#kpis tbody tr:not(.category-row) td:last-child {
+				border-bottom: 0;
+			}
+
+			#kpis .kpi-name {
+				font-size: 0.9rem;
+			}
+
+			#kpis .kpi-name::before {
+				display: none;
+			}
+
+			#kpis .footer-note {
+				font-size: 0.75rem;
+				padding: 10px 12px 12px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="page-wrapper">
+		<div class="page-header">
+			<div>
+				<h1 class="page-title">Plan de trabajo 2026</h1>
+				<p class="page-subtitle">Seguimiento de objetivos y KPIs</p>
+			</div>
+			<span class="page-badge">2026</span>
+		</div>
+	</div>
+
+	<div class="tabs-container">
+		<!-- TABS HEADER -->
+		<div class="tabs-header">
+			<button class="tab-button active" data-tab="kpis">📊 KPIs 2026</button>
+			<button class="tab-button" data-tab="objetivos">🎯 Objetivos</button>
+		</div>
+
+		<!-- TABS CONTENT -->
+		<div class="tabs-content">
+			<!-- TAB: KPIs -->
+			<div id="kpis" class="tab-panel active">
+				<div class="frame">
+					<section class="card" aria-label="Tabla de KPIs 2026">
+						<div class="table-wrap">
+							<table>
+								<thead>
+									<tr>
+										<th>KPI</th>
+										<th>
+											<div class="header-stack">
+												<span>Q1</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q2</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q3</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q4</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th class="meta-split">META DEL Q</th>
+										<th class="general">META GENERAL</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="category-row">
+										<td colspan="7">Productividad del Lote</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">VPI</span></td>
+										<td>315</td>
+										<td>322</td>
+										<td>318</td>
+										<td>330</td>
+										<td class="meta-split goal-quarter">320</td>
+										<td class="goal-general">325</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Edad Promedio</span></td>
+										<td>42 d</td>
+										<td>41 d</td>
+										<td>43 d</td>
+										<td>41 d</td>
+										<td class="meta-split goal-quarter">42 d</td>
+										<td class="goal-general">42 d</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">% Mortalidad Acum.</span></td>
+										<td>4.20 %</td>
+										<td>3.90 %</td>
+										<td>4.50 %</td>
+										<td>3.80 %</td>
+										<td class="meta-split goal-quarter">4 %</td>
+										<td class="goal-general">4 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">% Descartes</span></td>
+										<td>2.10 %</td>
+										<td>1.90 %</td>
+										<td>2.30 %</td>
+										<td>1.80 %</td>
+										<td class="meta-split goal-quarter">2 %</td>
+										<td class="goal-general">2 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Peso Prom. de Sacrificio</span></td>
+										<td>2.55 kg</td>
+										<td>2.60 kg</td>
+										<td>2.58 kg</td>
+										<td>2.65 kg</td>
+										<td class="meta-split goal-quarter">2.60 kg</td>
+										<td class="goal-general">2.62 kg</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">GAD</span></td>
+										<td>68 g</td>
+										<td>70 g</td>
+										<td>67 g</td>
+										<td>72 g</td>
+										<td class="meta-split goal-quarter">70 g</td>
+										<td class="goal-general">71 g</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Consumo Acumulado Prom.</span></td>
+										<td>4.80 kg</td>
+										<td>4.75 kg</td>
+										<td>4.82 kg</td>
+										<td>4.70 kg</td>
+										<td class="meta-split goal-quarter">4.75 kg</td>
+										<td class="goal-general">4.75 kg</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Conversión Alimenticia</span></td>
+										<td>1.82</td>
+										<td>1.79</td>
+										<td>1.84</td>
+										<td>1.77</td>
+										<td class="meta-split goal-quarter">1.80</td>
+										<td class="goal-general">1.80</td>
+									</tr>
+									<tr class="category-row">
+										<td colspan="7">Calidad y Sanidad</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Uniformidad del Lote</span></td>
+										<td>84 %</td>
+										<td>86 %</td>
+										<td>85 %</td>
+										<td>88 %</td>
+										<td class="meta-split goal-quarter">86 %</td>
+										<td class="goal-general">87 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Cumplimiento Vacunal</span></td>
+										<td>96 %</td>
+										<td>97 %</td>
+										<td>98 %</td>
+										<td>97 %</td>
+										<td class="meta-split goal-quarter">97 %</td>
+										<td class="goal-general">97 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Aprovechamiento de Planta</span></td>
+										<td>91 %</td>
+										<td>89 %</td>
+										<td>92 %</td>
+										<td>94 %</td>
+										<td class="meta-split goal-quarter">91 %</td>
+										<td class="goal-general">92 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Costo Promedio por Ave</span></td>
+										<td>$ 7,820</td>
+										<td>$ 7,740</td>
+										<td>$ 7,910</td>
+										<td>$ 7,680</td>
+										<td class="meta-split goal-quarter">$ 7,800</td>
+										<td class="goal-general">$ 7,780</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Índice de Decomisos</span></td>
+										<td>1.4 %</td>
+										<td>1.2 %</td>
+										<td>1.5 %</td>
+										<td>1.1 %</td>
+										<td class="meta-split goal-quarter">1.3 %</td>
+										<td class="goal-general">1.3 %</td>
+									</tr>
+									<tr class="category-row">
+										<td colspan="7">Eficiencia Operativa</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Disponibilidad Operativa</span></td>
+										<td>93 %</td>
+										<td>95 %</td>
+										<td>94 %</td>
+										<td>96 %</td>
+										<td class="meta-split goal-quarter">94 %</td>
+										<td class="goal-general">95 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Rendimiento Canal</span></td>
+										<td>73.8 %</td>
+										<td>74.1 %</td>
+										<td>73.9 %</td>
+										<td>74.4 %</td>
+										<td class="meta-split goal-quarter">74.0 %</td>
+										<td class="goal-general">74.1 %</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="footer-note">Datos actualizados: 14/04/2026</div>
+					</section>
+				</div>
+			</div>
+
+			<!-- TAB: Objetivos -->
+			<div id="objetivos" class="tab-panel">
+				<div class="app">
+					<section class="topbar">
+						<div class="mode-switch" aria-label="Cambiar vista">
+							<button class="mode-button is-active" id="readModeButton" type="button">Lectura</button>
+							<button class="mode-button" id="editModeButton" type="button">Edicion</button>
+						</div>
+						<div class="topbar-spacer">
+							<span class="topbar-note" id="modeHint">Modo lectura para visualizacion ejecutiva</span>
+						</div>
+						<div class="topbar-actions">
+							<button class="button-primary edit-only" id="addCategoryButton" type="button">+ Nueva categoria</button>
+						</div>
+					</section>
+
+					<section class="board">
+						<div class="toolbar">
+							<div class="toolbar-left"></div>
+						</div>
+
+						<div id="board"></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// ========== MODO EMBEDDED vs STANDALONE ==========
+		const params = new URLSearchParams(window.location.search);
+		if (!params.has('embedded')) {
+			document.body.classList.add('is-standalone');
+		}
+
+		// ========== TAB SWITCHING ==========
+		const tabButtons = document.querySelectorAll('.tab-button');
+		const tabPanels = document.querySelectorAll('.tab-panel');
+
+		function setupKpiMobileLabels() {
+			const table = document.querySelector('#kpis table');
+			if (!table) {
+				return;
+			}
+
+			const headers = Array.from(table.querySelectorAll('thead th')).map((th) =>
+				th.textContent.replace(/\s+/g, ' ').trim()
+			);
+
+			table.querySelectorAll('tbody tr').forEach((row) => {
+				if (row.classList.contains('category-row')) {
+					return;
+				}
+
+				Array.from(row.children).forEach((cell, index) => {
+					cell.dataset.label = headers[index] || `Col ${index + 1}`;
+				});
+			});
+		}
+
+		setupKpiMobileLabels();
+
+		tabButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				const tabName = button.dataset.tab;
+
+				// Remove active class from all buttons and panels
+				tabButtons.forEach(btn => btn.classList.remove('active'));
+				tabPanels.forEach(panel => panel.classList.remove('active'));
+
+				// Add active class to clicked button and corresponding panel
+				button.classList.add('active');
+				document.getElementById(tabName).classList.add('active');
+			});
+		});
+
+		// ========== OBJETIVOS FUNCTIONALITY ==========
+		const statusOptions = ["Estancado", "En curso", "Cumplido"];
+
+		const initialData = [
+			{
+				id: crypto.randomUUID(),
+				name: "Comercial",
+				objectives: [
+					{
+						id: crypto.randomUUID(),
+						title: "Aumentar cierres en cuentas clave",
+						leader: "Laura Gomez",
+						dueDate: "2026-05-15",
+						comment: "Prioridad alta para el segundo trimestre.",
+						milestones: [
+							{
+								id: crypto.randomUUID(),
+								title: "Redefinir propuesta de valor",
+								tasks: [
+									{
+										id: crypto.randomUUID(),
+										task: "Actualizar pitch comercial para sector salud",
+										leader: "Camilo Ruiz",
+										dueDate: "2026-04-18",
+										status: "En curso",
+										progress: 65,
+										comment: "Ya existe borrador y se esta validando con ventas."
+									},
+									{
+										id: crypto.randomUUID(),
+										task: "Crear version corta para reuniones de 15 minutos",
+										leader: "Valentina Diaz",
+										dueDate: "2026-04-22",
+										status: "Estancado",
+										progress: 30,
+										comment: "Falta feedback del equipo de direccion."
+									}
+								]
+							},
+							{
+								id: crypto.randomUUID(),
+								title: "Activar seguimiento semanal",
+								tasks: [
+									{
+										id: crypto.randomUUID(),
+										task: "Definir rutina de seguimiento post-demo",
+										leader: "Laura Gomez",
+										dueDate: "2026-04-25",
+										status: "Cumplido",
+										progress: 90,
+										comment: "Proceso aprobado y documentado."
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				id: crypto.randomUUID(),
+				name: "Operaciones",
+				objectives: [
+					{
+						id: crypto.randomUUID(),
+						title: "Disminuir tiempos de entrega interna",
+						leader: "David Herrera",
+						dueDate: "2026-06-02",
+						comment: "Enfocado en aprobaciones y trazabilidad.",
+						milestones: [
+							{
+								id: crypto.randomUUID(),
+								title: "Mapear cuellos de botella",
+								tasks: [
+									{
+										id: crypto.randomUUID(),
+										task: "Levantar tiempos reales por etapa del flujo",
+										leader: "Paula Rios",
+										dueDate: "2026-04-20",
+										status: "En curso",
+										progress: 70,
+										comment: "Se cargaron datos de tres equipos."
+									},
+									{
+										id: crypto.randomUUID(),
+										task: "Priorizar mejoras rapidas de aprobacion",
+										leader: "David Herrera",
+										dueDate: "2026-04-29",
+										status: "En curso",
+										progress: 55,
+										comment: "A falta de validar impacto con finanzas."
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		];
+
+		let state = structuredClone(initialData);
+		let viewMode = "read";
+		let pendingFocusPath = null;
+		let staticEventsBound = false;
+
+		const board = document.getElementById("board");
+		const addCategoryButton = document.getElementById("addCategoryButton");
+		const readModeButton = document.getElementById("readModeButton");
+		const editModeButton = document.getElementById("editModeButton");
+		const modeHint = document.getElementById("modeHint");
+
+		function createTask() {
+			return {
+				id: crypto.randomUUID(),
+				task: "Nueva tarea",
+				leader: "",
+				dueDate: "",
+				status: "En curso",
+				progress: 50,
+				comment: ""
+			};
+		}
+
+		function createMilestone() {
+			return {
+				id: crypto.randomUUID(),
+				title: "Nuevo hito",
+				tasks: [createTask()]
+			};
+		}
+
+		function createObjective() {
+			return {
+				id: crypto.randomUUID(),
+				title: "Nuevo objetivo",
+				leader: "",
+				dueDate: "",
+				comment: "",
+				milestones: [createMilestone()]
+			};
+		}
+
+		function createCategory() {
+			return {
+				id: crypto.randomUUID(),
+				name: "Nueva categoria",
+				objectives: [createObjective()]
+			};
+		}
+
+		function escapeHtml(value) {
+			return String(value ?? "")
+				.replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;")
+				.replaceAll('"', "&quot;");
+		}
+
+		function formatDate(value) {
+			if (!value) {
+				return "Sin fecha";
+			}
+
+			const date = new Date(`${value}T00:00:00`);
+			if (Number.isNaN(date.getTime())) {
+				return value;
+			}
+
+			return new Intl.DateTimeFormat("es-CO", {
+				day: "2-digit",
+				month: "short",
+				year: "numeric"
+			}).format(date);
+		}
+
+		function statusClass(status) {
+			return status.toLowerCase().replaceAll(" ", "-").replaceAll("á", "a");
+		}
+
+		function renderInputField(type, path, value, options = {}) {
+			const {
+				placeholder = "",
+				className = "",
+				emptyLabel = placeholder || "Sin informacion"
+			} = options;
+
+			if (viewMode === "read") {
+				const displayValue = type === "date" ? formatDate(value) : (value || emptyLabel);
+				const emptyClass = value ? "" : " is-empty";
+				return `<div class="read-value ${className}${emptyClass}">${escapeHtml(displayValue)}</div>`;
+			}
+
+			return `<input class="${className}" type="${type}" value="${escapeHtml(value)}" ${placeholder ? `placeholder="${escapeHtml(placeholder)}"` : ""} data-path="${path}">`;
+		}
+
+		function renderTextareaField(path, value, options = {}) {
+			const {
+				rows = 3,
+				placeholder = "",
+				className = "",
+				emptyLabel = placeholder || "Sin informacion"
+			} = options;
+
+			if (viewMode === "read") {
+				const displayValue = value || emptyLabel;
+				const emptyClass = value ? "" : " is-empty";
+				return `<div class="read-value ${className}${emptyClass}">${escapeHtml(displayValue)}</div>`;
+			}
+
+			return `<textarea class="${className}" rows="${rows}" ${placeholder ? `placeholder="${escapeHtml(placeholder)}"` : ""} data-path="${path}">${escapeHtml(value)}</textarea>`;
+		}
+
+		function renderStatusField(path, value) {
+			if (viewMode === "read") {
+				return `<span class="read-status ${statusClass(value)}">${escapeHtml(value)}</span>`;
+			}
+
+			return `
+				<select class="status-select ${statusClass(value)}" data-path="${path}">
+					${statusOptions.map((option) => `<option value="${option}" ${option === value ? "selected" : ""}>${option}</option>`).join("")}
+				</select>
+			`;
+		}
+
+		function renderProgressField(path, value) {
+			if (viewMode === "read") {
+				return `
+					<div class="read-progress">
+						<span class="progress-value">${value}%</span>
+						<div class="progress-bar"><span style="width: ${value}%"></span></div>
+					</div>
+				`;
+			}
+
+			return `
+				<span class="progress-value">${value}%</span>
+				<input class="progress-track" type="range" min="0" max="100" step="5" value="${value}" data-path="${path}">
+			`;
+		}
+
+		function updateField(path, value) {
+			let target = state;
+			for (let index = 0; index < path.length - 1; index += 1) {
+				target = target[path[index]];
+			}
+			target[path.at(-1)] = value;
+			render();
+		}
+
+		function scheduleFocus(path) {
+			pendingFocusPath = path.join("|");
+		}
+
+		function applyPendingFocus() {
+			if (!pendingFocusPath || viewMode !== "edit") {
+				return;
+			}
+
+			const focusSelector = `[data-path="${pendingFocusPath}"]`;
+			const element = document.querySelector(focusSelector);
+
+			pendingFocusPath = null;
+
+			if (!element) {
+				return;
+			}
+
+			requestAnimationFrame(() => {
+				element.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+				element.focus({ preventScroll: true });
+				if (typeof element.select === "function" && (element.tagName === "INPUT" || element.tagName === "TEXTAREA")) {
+					element.select();
+				}
+			});
+		}
+
+		function addCategory() {
+			state = [...state, createCategory()];
+			scheduleFocus([state.length - 1, "name"]);
+			render();
+		}
+
+		function addObjective(categoryIndex) {
+			state[categoryIndex].objectives.push(createObjective());
+			scheduleFocus([categoryIndex, "objectives", state[categoryIndex].objectives.length - 1, "title"]);
+			render();
+		}
+
+		function addMilestone(categoryIndex, objectiveIndex) {
+			state[categoryIndex].objectives[objectiveIndex].milestones.push(createMilestone());
+			scheduleFocus([
+				categoryIndex,
+				"objectives",
+				objectiveIndex,
+				"milestones",
+				state[categoryIndex].objectives[objectiveIndex].milestones.length - 1,
+				"title"
+			]);
+			render();
+		}
+
+		function addTask(categoryIndex, objectiveIndex, milestoneIndex) {
+			state[categoryIndex].objectives[objectiveIndex].milestones[milestoneIndex].tasks.push(createTask());
+			scheduleFocus([
+				categoryIndex,
+				"objectives",
+				objectiveIndex,
+				"milestones",
+				milestoneIndex,
+				"tasks",
+				state[categoryIndex].objectives[objectiveIndex].milestones[milestoneIndex].tasks.length - 1,
+				"task"
+			]);
+			render();
+		}
+
+		function countObjectiveRows(objective) {
+			return objective.milestones.reduce((total, milestone) => total + Math.max(milestone.tasks.length, 1), 0);
+		}
+
+		function useCompactObjectivesLayout() {
+			return window.matchMedia("(max-width: 980px)").matches;
+		}
+
+		function render() {
+			document.body.dataset.mode = viewMode;
+			readModeButton.classList.toggle("is-active", viewMode === "read");
+			editModeButton.classList.toggle("is-active", viewMode === "edit");
+			modeHint.textContent = viewMode === "read"
+				? "Modo lectura para visualizacion ejecutiva"
+				: "Modo edicion con acciones inline habilitadas";
+
+			if (!state.length) {
+				board.innerHTML = '<div class="empty-state">No hay categorias. Usa el boton <strong>+ Nueva categoria</strong> para comenzar.</div>';
+				return;
+			}
+
+			board.innerHTML = state
+				.map((category, categoryIndex) => renderCategory(category, categoryIndex))
+				.join("");
+
+			bindEvents();
+			applyPendingFocus();
+		}
+
+		function renderCategory(category, categoryIndex) {
+			const objectiveTotal = category.objectives.length;
+			const milestoneTotal = category.objectives.reduce((acc, objective) => acc + objective.milestones.length, 0);
+			const taskTotal = category.objectives.reduce(
+				(acc, objective) => acc + objective.milestones.reduce((taskAcc, milestone) => taskAcc + milestone.tasks.length, 0),
+				0
+			);
+
+			const categoryBody = useCompactObjectivesLayout()
+				? renderCategoryCompact(category, categoryIndex)
+				: renderCategoryTable(category, categoryIndex);
+
+			return `
+				<section class="category-card">
+					<div class="category-header">
+						<div class="category-ribbon ${viewMode === "edit" ? "is-editable" : ""}">
+							${viewMode === "read"
+								? escapeHtml(category.name)
+								: `<input class="category-title-input" type="text" value="${escapeHtml(category.name)}" data-path="${categoryIndex}|name" aria-label="Nombre de categoria">`}
+						</div>
+						<div class="category-meta">
+							<span class="pill">${objectiveTotal} objetivos</span>
+							<span class="pill">${milestoneTotal} hitos</span>
+							<span class="pill">${taskTotal} tareas</span>
+						</div>
+						<div class="category-actions edit-only">
+							<button class="button-ghost" type="button" data-action="add-objective" data-category-index="${categoryIndex}">+ Objetivo</button>
+						</div>
+					</div>
+						${categoryBody}
+				</section>
+			`;
+		}
+
+			function renderCategoryTable(category, categoryIndex) {
+				return `
+					<div class="table-wrap">
+						<table>
+							<thead>
+								<tr>
+									<th>Objetivo</th>
+									<th>Hito</th>
+									<th>Tarea</th>
+									<th>Lider</th>
+									<th>Fecha objetivo</th>
+									<th>Estado</th>
+									<th>% cumplimiento</th>
+									<th>Comentario</th>
+								</tr>
+							</thead>
+							<tbody>
+								${category.objectives.map((objective, objectiveIndex) => renderObjectiveRows(category, categoryIndex, objective, objectiveIndex)).join("")}
+							</tbody>
+						</table>
+					</div>
+				`;
+			}
+
+			function renderMobileField(label, content) {
+				return `
+					<div class="mobile-field">
+						<span>${escapeHtml(label)}</span>
+						${content}
+					</div>
+				`;
+			}
+
+			function renderCategoryCompact(category, categoryIndex) {
+				return `
+					<div class="mobile-objectives">
+						${category.objectives.map((objective, objectiveIndex) => `
+							<article class="objective-mobile-card">
+								<div class="mobile-block-header">
+									<span class="mobile-block-title">Objetivo</span>
+									<div class="mini-actions edit-only">
+										<button class="button-ghost" type="button" data-action="add-milestone" data-category-index="${categoryIndex}" data-objective-index="${objectiveIndex}">+ Hito</button>
+									</div>
+								</div>
+								<div class="mobile-block-content">
+									${renderMobileField("Objetivo", renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|title`, objective.title, { rows: 3, emptyLabel: "Sin objetivo" }))}
+									${renderMobileField("Lider", renderInputField("text", `${categoryIndex}|objectives|${objectiveIndex}|leader`, objective.leader, { placeholder: "Lider del objetivo" }))}
+									${renderMobileField("Fecha objetivo", renderInputField("date", `${categoryIndex}|objectives|${objectiveIndex}|dueDate`, objective.dueDate))}
+									${renderMobileField("Comentario", renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|comment`, objective.comment, { rows: 3, placeholder: "Contexto o alcance" }))}
+								</div>
+
+								${objective.milestones.map((milestone, milestoneIndex) => `
+									<section class="mobile-milestone">
+										<div class="mobile-block-header">
+											<span class="mobile-block-title">Hito</span>
+											<div class="mini-actions edit-only">
+												<button class="button-ghost" type="button" data-action="add-task" data-category-index="${categoryIndex}" data-objective-index="${objectiveIndex}" data-milestone-index="${milestoneIndex}">+ Tarea</button>
+											</div>
+										</div>
+										<div class="mobile-block-content">
+											${renderMobileField("Hito", renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|title`, milestone.title, { rows: 3, emptyLabel: "Sin hito" }))}
+										</div>
+
+										<div class="mobile-task-list">
+											${milestone.tasks.map((task, taskIndex) => `
+												<article class="mobile-task">
+													<div class="mobile-block-header">
+														<span class="mobile-block-title">Tarea ${taskIndex + 1}</span>
+													</div>
+													<div class="mobile-block-content">
+														${renderMobileField("Tarea", renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|task`, task.task, { rows: 3, emptyLabel: "Sin tarea" }))}
+														${renderMobileField("Lider", renderInputField("text", `${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|leader`, task.leader, { placeholder: "Asignar lider" }))}
+														${renderMobileField("Fecha objetivo", renderInputField("date", `${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|dueDate`, task.dueDate))}
+														${renderMobileField("Estado", renderStatusField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|status`, task.status))}
+														${renderMobileField("Cumplimiento", renderProgressField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|progress`, task.progress))}
+														${renderMobileField("Comentario", renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|comment`, task.comment, { rows: 3, placeholder: "Notas y observaciones" }))}
+													</div>
+												</article>
+											`).join("")}
+										</div>
+									</section>
+								`).join("")}
+							</article>
+						`).join("")}
+					</div>
+				`;
+			}
+
+		function renderObjectiveRows(category, categoryIndex, objective, objectiveIndex) {
+			const objectiveRowSpan = countObjectiveRows(objective);
+			let objectivePrinted = false;
+
+			return objective.milestones
+				.map((milestone, milestoneIndex) => {
+					const milestoneRowSpan = Math.max(milestone.tasks.length, 1);
+					let milestonePrinted = false;
+
+					return milestone.tasks.map((task, taskIndex) => {
+						const row = [];
+
+						if (!objectivePrinted) {
+							objectivePrinted = true;
+							row.push(`
+								<td rowspan="${objectiveRowSpan}" class="objective-cell">
+									<div class="cell">
+										<div class="cell-header">
+											<div class="mini-actions edit-only">
+												<button class="button-ghost" type="button" data-action="add-milestone" data-category-index="${categoryIndex}" data-objective-index="${objectiveIndex}">+ Hito</button>
+											</div>
+										</div>
+										${renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|title`, objective.title, { rows: 4, emptyLabel: "Sin objetivo" })}
+										${renderInputField("text", `${categoryIndex}|objectives|${objectiveIndex}|leader`, objective.leader, { placeholder: "Lider del objetivo" })}
+										${renderInputField("date", `${categoryIndex}|objectives|${objectiveIndex}|dueDate`, objective.dueDate)}
+										${renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|comment`, objective.comment, { rows: 3, placeholder: "Contexto o alcance" })}
+									</div>
+								</td>
+							`);
+						}
+
+						if (!milestonePrinted) {
+							milestonePrinted = true;
+							row.push(`
+								<td rowspan="${milestoneRowSpan}" class="milestone-cell">
+									<div class="cell">
+										<div class="cell-header">
+											<div class="mini-actions edit-only">
+												<button class="button-ghost" type="button" data-action="add-task" data-category-index="${categoryIndex}" data-objective-index="${objectiveIndex}" data-milestone-index="${milestoneIndex}">+ Tarea</button>
+											</div>
+										</div>
+										${renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|title`, milestone.title, { rows: 4, emptyLabel: "Sin hito" })}
+									</div>
+								</td>
+							`);
+						}
+
+						row.push(`
+							<td>
+								<div class="cell">
+									${renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|task`, task.task, { rows: 3, emptyLabel: "Sin tarea" })}
+								</div>
+							</td>
+							<td>
+								<div class="cell">
+									${renderInputField("text", `${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|leader`, task.leader, { placeholder: "Asignar lider" })}
+								</div>
+							</td>
+							<td>
+								<div class="cell">
+									${renderInputField("date", `${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|dueDate`, task.dueDate)}
+								</div>
+							</td>
+							<td>
+								<div class="cell">
+									${renderStatusField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|status`, task.status)}
+								</div>
+							</td>
+							<td>
+								<div class="cell progress-box">
+									${renderProgressField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|progress`, task.progress)}
+								</div>
+							</td>
+							<td>
+								<div class="cell">
+									${renderTextareaField(`${categoryIndex}|objectives|${objectiveIndex}|milestones|${milestoneIndex}|tasks|${taskIndex}|comment`, task.comment, { rows: 3, placeholder: "Notas y observaciones" })}
+								</div>
+							</td>
+						`);
+
+						return `<tr>${row.join("")}</tr>`;
+					}).join("");
+				}).join("");
+		}
+
+		function bindEvents() {
+			if (!staticEventsBound) {
+				// Mode switching
+				readModeButton.addEventListener("click", () => {
+					viewMode = "read";
+					render();
+				});
+
+				editModeButton.addEventListener("click", () => {
+					viewMode = "edit";
+					render();
+				});
+
+				// Add category
+				addCategoryButton?.addEventListener("click", addCategory);
+
+				const compactQuery = window.matchMedia("(max-width: 980px)");
+				compactQuery.addEventListener("change", () => {
+					render();
+				});
+
+				staticEventsBound = true;
+			}
+
+			// Field updates
+			document.querySelectorAll("[data-path]").forEach((element) => {
+				if (element.tagName === "INPUT" || element.tagName === "TEXTAREA" || element.tagName === "SELECT") {
+					element.addEventListener("change", () => {
+						const path = element.dataset.path.split("|").map((part) => (Number.isNaN(Number(part)) ? part : Number(part)));
+						updateField(path, element.tagName === "INPUT" && element.type === "number" ? Number(element.value) : element.value);
+					});
+
+					if (element.tagName === "INPUT" && element.type === "range") {
+						element.addEventListener("input", () => {
+							const path = element.dataset.path.split("|").map((part) => (Number.isNaN(Number(part)) ? part : Number(part)));
+							updateField(path, Number(element.value));
+						});
+					}
+				}
+			});
+
+			// Action buttons
+			document.querySelectorAll("[data-action]").forEach((button) => {
+				button.addEventListener("click", () => {
+					const action = button.dataset.action;
+					const categoryIndex = Number(button.dataset.categoryIndex);
+					const objectiveIndex = Number(button.dataset.objectiveIndex);
+					const milestoneIndex = Number(button.dataset.milestoneIndex);
+
+					if (action === "add-objective") {
+						addObjective(categoryIndex);
+					} else if (action === "add-milestone") {
+						addMilestone(categoryIndex, objectiveIndex);
+					} else if (action === "add-task") {
+						addTask(categoryIndex, objectiveIndex, milestoneIndex);
+					}
+				});
+			});
+		}
+
+		// Initial render
+		render();
+	</script>
+</body>
+</html>
