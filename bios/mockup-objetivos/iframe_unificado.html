@@ -901,6 +901,32 @@
 				padding: 10px;
 			}
 
+/* Expande inputs y textareas al hacer clic (focus) en desktop */
+@media (min-width: 981px) {
+	input:focus,
+	select:focus {
+		min-height: 48px;
+		font-size: 1.1rem;
+		box-shadow: 0 0 0 6px rgba(0,164,189,0.13), 0 2px 16px rgba(23,58,99,0.10);
+		border-color: var(--accent);
+		z-index: 2;
+		position: relative;
+		width: auto;
+		max-width: 100%;
+	}
+	textarea:focus {
+		min-height: 90px;
+		font-size: 1.1rem;
+		box-shadow: 0 0 0 6px rgba(0,164,189,0.13), 0 2px 16px rgba(23,58,99,0.10);
+		border-color: var(--accent);
+		z-index: 2;
+		position: relative;
+		width: auto;
+		max-width: 100%;
+		resize: vertical;
+	}
+}
+
 			#kpis tbody tr {
 				display: block;
 				margin: 0 0 10px;
@@ -1212,6 +1238,18 @@
 		</div>
 	</div>
 
+	<!-- Popup de edición -->
+  <div id="editPopup" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(23,58,99,0.18);z-index:1000;align-items:center;justify-content:center;">
+    <div id="editPopupContent" style="background:#fff;padding:32px 24px 24px 24px;border-radius:18px;box-shadow:0 8px 32px rgba(23,58,99,0.18);min-width:320px;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;gap:18px;">
+      <h3 id="editPopupLabel" style="margin:0 0 10px 0;font-size:1.1rem;color:#173a63;font-weight:700;"></h3>
+      <div id="editPopupField"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:10px;">
+        <button id="editPopupCancel" class="button-secondary" type="button">Cancelar</button>
+        <button id="editPopupSave" class="button-primary" type="button">Guardar</button>
+      </div>
+    </div>
+  </div>
+  	<script src="bindEditPopupButtons.js"></script>	
 	<script>
 		// ========== MODO EMBEDDED vs STANDALONE ==========
 		const params = new URLSearchParams(window.location.search);
@@ -1451,7 +1489,9 @@
 				return `<div class="read-value ${className}${emptyClass}">${escapeHtml(displayValue)}</div>`;
 			}
 
-			return `<input class="${className}" type="${type}" value="${escapeHtml(value)}" ${placeholder ? `placeholder="${escapeHtml(placeholder)}"` : ""} data-path="${path}">`;
+			// En modo edición, mostrar valor y un botón de lápiz
+			const displayValue = type === "date" ? formatDate(value) : (value || emptyLabel);
+			return `<div class="edit-cell-value ${className}">${escapeHtml(displayValue)}</div><button class="edit-cell-btn" data-path="${path}" data-type="${type}" title="Editar"><span style="pointer-events:none;">✏️</span></button>`;
 		}
 
 		function renderTextareaField(path, value, options = {}) {
@@ -1468,7 +1508,8 @@
 				return `<div class="read-value ${className}${emptyClass}">${escapeHtml(displayValue)}</div>`;
 			}
 
-			return `<textarea class="${className}" rows="${rows}" ${placeholder ? `placeholder="${escapeHtml(placeholder)}"` : ""} data-path="${path}">${escapeHtml(value)}</textarea>`;
+			// En modo edición, mostrar valor y un botón de lápiz
+			return `<div class="edit-cell-value ${className}">${escapeHtml(value || emptyLabel)}</div><button class="edit-cell-btn" data-path="${path}" data-type="textarea" data-rows="${rows}" title="Editar"><span style="pointer-events:none;">✏️</span></button>`;
 		}
 
 		function renderStatusField(path, value) {
@@ -1601,6 +1642,7 @@
 				.join("");
 
 			bindEvents();
+			bindEditPopupButtons();
 			applyPendingFocus();
 		}
 
