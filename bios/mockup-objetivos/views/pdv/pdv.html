@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>PDV · Objetivos</title>
+	<link href="../shared.css" rel="stylesheet">
+	<link href="pdv.css" rel="stylesheet">
+</head>
+<body>
+	<!-- Visible solo en modo standalone -->
+	<div class="page-wrapper">
+		<div class="page-header">
+			<div>
+				<h1 class="page-title">Objetivos del Plan</h1>
+				<p class="page-subtitle">Punto de Venta · Vista ejecutiva</p>
+			</div>
+			<span class="page-badge">2026</span>
+		</div>
+	</div>
+
+	<div class="pdv-shell">
+
+		<!-- Barra de controles -->
+		<div class="pdv-topbar">
+			<div class="pdv-topbar-left">
+				<span class="pdv-count" id="pdvCount"></span>
+				<div class="pdv-filter" role="group" aria-label="Filtrar por semestre">
+					<button class="filter-btn is-active" data-sem="all" type="button">Todos</button>
+					<button class="filter-btn" data-sem="S1" type="button">Sem. 1</button>
+					<button class="filter-btn" data-sem="S2" type="button">Sem. 2</button>
+				</div>
+				<div class="pdv-mode-switch" role="group" aria-label="Modo de vista">
+					<button class="mode-btn is-active" data-mode="read" type="button">Vista</button>
+					<button class="mode-btn" data-mode="edit" type="button">Edición</button>
+				</div>
+			</div>
+			<div class="pdv-topbar-right">
+				<button class="pdv-btn-ghost" id="expandAllBtn" type="button">Expandir todo</button>
+				<button class="pdv-btn-primary" id="addObjBtn" type="button" hidden>+ Nuevo objetivo</button>
+			</div>
+		</div>
+
+		<!-- Estado de guardado global -->
+		<div class="pdv-save-bar" id="saveBar" aria-live="polite" hidden></div>
+
+		<!-- Lista de objetivos (renderizada por JS) -->
+		<div class="pdv-list" id="pdvList" role="list"></div>
+
+	</div>
+
+	<script src="pdv.js"></script>
+</body>
+</html>

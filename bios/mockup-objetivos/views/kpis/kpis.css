@@ -1,0 +1,241 @@
+/* ========== KPIs ========== */
+#kpis .frame {
+    width: 100%;
+    padding: 0;
+}
+
+#kpis .card {
+    background: var(--card);
+    border-radius: 0 0 var(--radius) var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid rgba(183, 212, 244, 0.45);
+}
+
+#kpis .table-wrap {
+    overflow-x: auto;
+}
+
+#kpis table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1040px;
+}
+
+#kpis thead th {
+    padding: 14px 14px 12px;
+    background: var(--header);
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #195184;
+    text-align: center;
+}
+
+#kpis thead th:first-child {
+    text-align: left;
+    min-width: 290px;
+    padding-left: 16px;
+}
+
+#kpis thead th.meta-split,
+#kpis tbody td.meta-split {
+    border-left: 2px solid var(--line-strong);
+}
+
+#kpis thead th.general {
+    color: var(--green);
+}
+
+.header-stack {
+    display: grid;
+    gap: 2px;
+    justify-items: center;
+}
+
+.header-stack span:last-child {
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text-soft);
+}
+
+#kpis tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+    line-height: 1.2;
+    text-align: center;
+    color: #153f68;
+    background: #ffffff;
+}
+
+#kpis tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+#kpis tbody td:first-child {
+    text-align: left;
+    padding-left: 16px;
+    font-size: 0.92rem;
+}
+
+#kpis tbody tr.category-row td {
+    padding: 9px 16px;
+    background: linear-gradient(90deg, #edf4fb 0%, #f8fbff 100%);
+    border-top: 1px solid #c9dbef;
+    border-bottom: 1px solid #c9dbef;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #35638f;
+    text-align: left;
+}
+
+.kpi-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #0f3257;
+}
+
+.kpi-name::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #c2ceda;
+    flex: 0 0 auto;
+}
+
+.goal-quarter,
+.goal-general {
+    font-weight: 800;
+}
+
+.goal-quarter {
+    color: #0f4f87;
+}
+
+.goal-general {
+    color: var(--green);
+}
+
+#kpis .footer-note {
+    padding: 12px 18px 14px;
+    border-top: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(247, 249, 252, 0.7), rgba(244, 247, 251, 0.92));
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* ========== KPIs RESPONSIVE ========== */
+@media (max-width: 900px) {
+    #kpis thead th,
+    #kpis tbody td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #kpis table {
+        min-width: 760px;
+    }
+}
+
+@media (max-width: 760px) {
+    #kpis .table-wrap {
+        overflow: visible;
+    }
+
+    #kpis table {
+        width: 100%;
+        min-width: 0;
+        display: block;
+    }
+
+    #kpis thead {
+        display: none;
+    }
+
+    #kpis tbody {
+        display: block;
+        padding: 10px;
+    }
+
+    #kpis tbody tr {
+        display: block;
+        margin: 0 0 10px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+    }
+
+    #kpis tbody tr.category-row {
+        margin: 14px 0 6px;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    #kpis tbody tr.category-row td {
+        border-radius: 10px;
+        border: 1px solid #c9dbef;
+        padding: 10px 12px;
+    }
+
+    #kpis tbody td {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 9px 12px;
+        text-align: right;
+        border-bottom: 1px solid var(--line);
+    }
+
+    #kpis tbody tr:not(.category-row) td::before {
+        content: attr(data-label);
+        font-size: 0.68rem;
+        line-height: 1.1;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--text-soft);
+        text-align: left;
+        flex: 1;
+    }
+
+    #kpis tbody tr:not(.category-row) td:first-child {
+        background: #f8fbff;
+        font-weight: 700;
+    }
+
+    #kpis tbody tr:not(.category-row) td:first-child::before {
+        color: #35638f;
+    }
+
+    #kpis tbody tr:not(.category-row) td:last-child {
+        border-bottom: 0;
+    }
+
+    #kpis .kpi-name {
+        font-size: 0.9rem;
+    }
+
+    #kpis .kpi-name::before {
+        display: none;
+    }
+
+    #kpis .footer-note {
+        font-size: 0.75rem;
+        padding: 10px 12px 12px;
+    }
+}

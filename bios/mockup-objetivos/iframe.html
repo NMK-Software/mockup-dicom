@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>KPIs y Objetivos 2026</title>
+	<link href="views/shared.css" rel="stylesheet">
+	<link href="views/kpis/kpis.css" rel="stylesheet">
+	<link href="views/objetivos/objetivos.css" rel="stylesheet">
+</head>
+<body>
+	<script>
+		(function () {
+			var canal = new URLSearchParams(location.search).get('canal');
+			if (canal && canal !== '1') {
+				location.replace('views/pdv/pdv.html' + location.search);
+			}
+		}());
+	</script>
+	<div class="page-wrapper">
+		<div class="page-header">
+			<div>
+				<h1 class="page-title">Plan de trabajo 2026</h1>
+				<p class="page-subtitle">Seguimiento de objetivos y KPIs</p>
+			</div>
+			<span class="page-badge">2026</span>
+		</div>
+	</div>
+
+	<div class="tabs-container">
+		<!-- TABS HEADER -->
+		<div class="tabs-header">
+			<button class="tab-button active" data-tab="kpis">📊 KPIs 2026</button>
+			<button class="tab-button" data-tab="objetivos">🎯 Objetivos</button>
+		</div>
+
+		<!-- TABS CONTENT -->
+		<div class="tabs-content">
+			<!-- TAB: KPIs -->
+			<div id="kpis" class="tab-panel active">
+				<div class="frame">
+					<section class="card" aria-label="Tabla de KPIs 2026">
+						<div class="table-wrap">
+							<table>
+								<thead>
+									<tr>
+										<th>KPI</th>
+										<th>
+											<div class="header-stack">
+												<span>Q1</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q2</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q3</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th>
+											<div class="header-stack">
+												<span>Q4</span>
+												<span>2026</span>
+											</div>
+										</th>
+										<th class="meta-split">META DEL Q</th>
+										<th class="general">META GENERAL</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="category-row">
+										<td colspan="7">Productividad del Lote</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">VPI</span></td>
+										<td>315</td>
+										<td>322</td>
+										<td>318</td>
+										<td>330</td>
+										<td class="meta-split goal-quarter">320</td>
+										<td class="goal-general">325</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Edad Promedio</span></td>
+										<td>42 d</td>
+										<td>41 d</td>
+										<td>43 d</td>
+										<td>41 d</td>
+										<td class="meta-split goal-quarter">42 d</td>
+										<td class="goal-general">42 d</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">% Mortalidad Acum.</span></td>
+										<td>4.20 %</td>
+										<td>3.90 %</td>
+										<td>4.50 %</td>
+										<td>3.80 %</td>
+										<td class="meta-split goal-quarter">4 %</td>
+										<td class="goal-general">4 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">% Descartes</span></td>
+										<td>2.10 %</td>
+										<td>1.90 %</td>
+										<td>2.30 %</td>
+										<td>1.80 %</td>
+										<td class="meta-split goal-quarter">2 %</td>
+										<td class="goal-general">2 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Peso Prom. de Sacrificio</span></td>
+										<td>2.55 kg</td>
+										<td>2.60 kg</td>
+										<td>2.58 kg</td>
+										<td>2.65 kg</td>
+										<td class="meta-split goal-quarter">2.60 kg</td>
+										<td class="goal-general">2.62 kg</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">GAD</span></td>
+										<td>68 g</td>
+										<td>70 g</td>
+										<td>67 g</td>
+										<td>72 g</td>
+										<td class="meta-split goal-quarter">70 g</td>
+										<td class="goal-general">71 g</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Consumo Acumulado Prom.</span></td>
+										<td>4.80 kg</td>
+										<td>4.75 kg</td>
+										<td>4.82 kg</td>
+										<td>4.70 kg</td>
+										<td class="meta-split goal-quarter">4.75 kg</td>
+										<td class="goal-general">4.75 kg</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Conversión Alimenticia</span></td>
+										<td>1.82</td>
+										<td>1.79</td>
+										<td>1.84</td>
+										<td>1.77</td>
+										<td class="meta-split goal-quarter">1.80</td>
+										<td class="goal-general">1.80</td>
+									</tr>
+									<tr class="category-row">
+										<td colspan="7">Calidad y Sanidad</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Uniformidad del Lote</span></td>
+										<td>84 %</td>
+										<td>86 %</td>
+										<td>85 %</td>
+										<td>88 %</td>
+										<td class="meta-split goal-quarter">86 %</td>
+										<td class="goal-general">87 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Cumplimiento Vacunal</span></td>
+										<td>96 %</td>
+										<td>97 %</td>
+										<td>98 %</td>
+										<td>97 %</td>
+										<td class="meta-split goal-quarter">97 %</td>
+										<td class="goal-general">97 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Aprovechamiento de Planta</span></td>
+										<td>91 %</td>
+										<td>89 %</td>
+										<td>92 %</td>
+										<td>94 %</td>
+										<td class="meta-split goal-quarter">91 %</td>
+										<td class="goal-general">92 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Costo Promedio por Ave</span></td>
+										<td>$ 7,820</td>
+										<td>$ 7,740</td>
+										<td>$ 7,910</td>
+										<td>$ 7,680</td>
+										<td class="meta-split goal-quarter">$ 7,800</td>
+										<td class="goal-general">$ 7,780</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Índice de Decomisos</span></td>
+										<td>1.4 %</td>
+										<td>1.2 %</td>
+										<td>1.5 %</td>
+										<td>1.1 %</td>
+										<td class="meta-split goal-quarter">1.3 %</td>
+										<td class="goal-general">1.3 %</td>
+									</tr>
+									<tr class="category-row">
+										<td colspan="7">Eficiencia Operativa</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Disponibilidad Operativa</span></td>
+										<td>93 %</td>
+										<td>95 %</td>
+										<td>94 %</td>
+										<td>96 %</td>
+										<td class="meta-split goal-quarter">94 %</td>
+										<td class="goal-general">95 %</td>
+									</tr>
+									<tr>
+										<td><span class="kpi-name">Rendimiento Canal</span></td>
+										<td>73.8 %</td>
+										<td>74.1 %</td>
+										<td>73.9 %</td>
+										<td>74.4 %</td>
+										<td class="meta-split goal-quarter">74.0 %</td>
+										<td class="goal-general">74.1 %</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="footer-note">Datos actualizados: 14/04/2026</div>
+					</section>
+				</div>
+			</div>
+
+			<!-- TAB: Objetivos -->
+			<div id="objetivos" class="tab-panel">
+				<div class="app">
+					<section class="topbar">
+						<div class="mode-switch" aria-label="Cambiar vista">
+							<button class="mode-button is-active" id="readModeButton" type="button">Lectura</button>
+							<button class="mode-button" id="editModeButton" type="button">Edicion</button>
+						</div>
+						<div class="topbar-spacer">
+							<span class="topbar-note" id="modeHint">Modo lectura para visualizacion ejecutiva</span>
+						</div>
+						<div class="topbar-actions">
+							<button class="button-primary edit-only" id="addCategoryButton" type="button">+ Nueva categoria</button>
+						</div>
+					</section>
+
+					<section class="board">
+						<div class="toolbar">
+							<div class="toolbar-left"></div>
+						</div>
+
+						<div id="board"></div>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Popup de edición -->
+  <div id="editPopup" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(23,58,99,0.18);z-index:1000;align-items:center;justify-content:center;">
+    <div id="editPopupContent" style="background:#fff;padding:32px 24px 24px 24px;border-radius:18px;box-shadow:0 8px 32px rgba(23,58,99,0.18);min-width:320px;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;gap:18px;">
+      <h3 id="editPopupLabel" style="margin:0 0 10px 0;font-size:1.1rem;color:#173a63;font-weight:700;"></h3>
+      <div id="editPopupField"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:10px;">
+        <button id="editPopupCancel" class="button-secondary" type="button">Cancelar</button>
+        <button id="editPopupSave" class="button-primary" type="button">Guardar</button>
+      </div>
+    </div>
+  </div>
+	<script>
+		(function () {
+			var tabButtons = document.querySelectorAll('.tab-button');
+			function activateTab(tabName) {
+				tabButtons.forEach(function (btn) {
+					btn.classList.toggle('active', btn.dataset.tab === tabName);
+				});
+				document.querySelectorAll('.tab-panel').forEach(function (panel) {
+					panel.classList.toggle('active', panel.id === tabName);
+				});
+			}
+			tabButtons.forEach(function (btn) {
+				btn.addEventListener('click', function () { activateTab(btn.dataset.tab); });
+			});
+		}());
+	</script>
+	<script src="views/objetivos/bindEditPopupButtons.js"></script>
+	<script src="views/objetivos/objetivos.js"></script>
+	<script src="views/kpis/kpis.js"></script>
+</body>
+</html>
