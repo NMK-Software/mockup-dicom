@@ -116,6 +116,23 @@ openButton.addEventListener("click", () => openModal("iframe.html?embedded=true&
 pdvButton?.addEventListener("click", () => openModal("iframe.html?embedded=true&canal=2"));
 closeButton.addEventListener("click", closeModal);
 
+(function applyCanal() {
+    const canal = new URLSearchParams(location.search).get('canal');
+    const url = canal === '2' ? 'iframe.html?canal=2' : 'iframe.html?canal=1';
+
+    if (canal === '1') { pdvButton.hidden = true; }
+    else if (canal === '2') { openButton.hidden = true; }
+
+    document.getElementById('openTabLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        window.open(url, '_blank', 'noopener');
+    });
+
+    const mobileLink = document.getElementById('mobileIframeLink');
+    mobileLink.href = url;
+    mobileLink.textContent = url;
+}());
+
 modal.addEventListener("click", (event) => {
 	if (event.target === modal) {
 		closeModal();

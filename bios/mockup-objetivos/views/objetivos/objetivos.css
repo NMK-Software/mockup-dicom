@@ -321,9 +321,14 @@
     font-weight: 700;
 }
 
-.status-estancado {
+.status-retrasado {
     color: var(--blocked);
     background: rgba(154, 50, 50, 0.08);
+}
+
+.status-planeado {
+    color: #4a6583;
+    background: rgba(74, 101, 131, 0.08);
 }
 
 .status-en-curso {

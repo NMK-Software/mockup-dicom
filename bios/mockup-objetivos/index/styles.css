@@ -725,6 +725,27 @@ select {
     background: rgba(255, 122, 89, 0.06);
 }
 
+.open-tab-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: linear-gradient(180deg, #f6f9fc, #ecf2f8);
+    color: #7c98b6;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.open-tab-link:hover {
+    background: linear-gradient(180deg, #ffffff, #edf3f8);
+    color: var(--teal);
+    transform: translateY(-1px);
+}
+
 .metric-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1078,6 +1099,11 @@ select {
     .m-tab.is-active {
         color: #00a4bd;
         border-bottom-color: #00a4bd;
+    }
+
+    .m-tab:disabled {
+        opacity: 0.38;
+        cursor: default;
     }
 
     /* ---- Content area ---- */

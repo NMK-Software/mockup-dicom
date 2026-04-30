@@ -11,9 +11,14 @@
 <body>
 	<script>
 		(function () {
-			var canal = new URLSearchParams(location.search).get('canal');
+			var params = new URLSearchParams(location.search);
+			var canal = params.get('canal');
 			if (canal && canal !== '1') {
 				location.replace('views/pdv/pdv.html' + location.search);
+				return;
+			}
+			if (!params.has('embedded')) {
+				document.body.classList.add('is-standalone');
 			}
 		}());
 	</script>

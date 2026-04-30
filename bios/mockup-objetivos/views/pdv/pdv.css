@@ -223,11 +223,11 @@ body.is-standalone .pdv-shell {
     border-color: #3dbf8a;
 }
 
-.obj-card[data-status="Pendiente"] {
+.obj-card[data-status="Planeado"] {
     border-left-color: #e8c53a;
     background: #fefef2;
 }
-.obj-card[data-status="Pendiente"][data-open="true"] {
+.obj-card[data-status="Planeado"][data-open="true"] {
     border-color: #e8c53a;
 }
 
@@ -239,11 +239,11 @@ body.is-standalone .pdv-shell {
     border-color: #f0a025;
 }
 
-.obj-card[data-status="Estancado"] {
+.obj-card[data-status="Retrasado"] {
     border-left-color: #e05555;
     background: #fef6f6;
 }
-.obj-card[data-status="Estancado"][data-open="true"] {
+.obj-card[data-status="Retrasado"][data-open="true"] {
     border-color: #e05555;
 }
 
@@ -328,10 +328,10 @@ body.is-standalone .pdv-shell {
 }
 
 /* Hereda los colores de los status-* existentes */
-.obj-kpi-tag.status-pendiente  { background: #fdf8d6; color: #7a6200; border: 1px solid rgba(232,197,58,0.35); }
+.obj-kpi-tag.status-planeado  { background: #fdf8d6; color: #7a6200; border: 1px solid rgba(232,197,58,0.35); }
 .obj-kpi-tag.status-en-curso   { background: #fef0d6; color: #935200; border: 1px solid rgba(240,160,37,0.35); }
 .obj-kpi-tag.status-cumplido   { background: #d8f5e8; color: #00613a; border: 1px solid rgba(61,191,138,0.35); }
-.obj-kpi-tag.status-estancado  { background: #fde0e0; color: #8b1a1a; border: 1px solid rgba(224,85,85,0.35); }
+.obj-kpi-tag.status-retrasado  { background: #fde0e0; color: #8b1a1a; border: 1px solid rgba(224,85,85,0.35); }
 
 /* ========== BADGES ========== */
 .sem-tag {
@@ -358,10 +358,10 @@ body.is-standalone .pdv-shell {
     white-space: nowrap;
 }
 
-.status-pendiente  { background: #edf1f6; color: #4a6583; }
+.status-planeado  { background: #edf1f6; color: #4a6583; }
 .status-en-curso   { background: #fff4ee; color: #c05c2e; }
 .status-cumplido   { background: #e8f7f2; color: #006c67; }
-.status-estancado  { background: #fdf2f2; color: #a33b3b; }
+.status-retrasado  { background: #fdf2f2; color: #a33b3b; }
 
 .obj-date-tag {
     font-size: 0.76rem;
@@ -628,7 +628,7 @@ body.is-standalone .pdv-shell {
     border-color: var(--line);
 }
 
-.tc-select.status-pendiente {
+.tc-select.status-planeado {
     background-color: #edf1f6;
     color: #4a6583;
     border-color: rgba(74, 101, 131, 0.18);
@@ -649,7 +649,7 @@ body.is-standalone .pdv-shell {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23006c67'/%3E%3C/svg%3E");
 }
 
-.tc-select.status-estancado {
+.tc-select.status-retrasado {
     background-color: #fdf2f2;
     color: #a33b3b;
     border-color: rgba(163, 59, 59, 0.18);
@@ -770,6 +770,12 @@ body.is-standalone .pdv-shell {
     }
 }
 
+@media (max-width: 640px) {
+    body.is-standalone .pdv-shell {
+        padding: 0 12px 32px;
+    }
+}
+
 @media (max-width: 560px) {
     .pdv-shell {
         padding: 10px 12px 24px;
@@ -795,5 +801,68 @@ body.is-standalone .pdv-shell {
 
     .obj-header {
         padding: 12px;
+    }
+}
+
+/* ========== TABLAS → LISTA APILADA EN MOBILE ========== */
+@media (max-width: 640px) {
+    .section-table-wrap {
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .section-table,
+    .section-table thead,
+    .section-table tbody,
+    .section-table tr,
+    .section-table th,
+    .section-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* Ocultar cabecera: los labels vienen del data-label */
+    .section-table thead {
+        display: none;
+    }
+
+    .section-table tbody tr {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .section-table tbody td {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 10px 12px;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        min-width: unset;
+    }
+
+    .section-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    /* Etiqueta de columna como label */
+    .section-table tbody td::before {
+        content: attr(data-label);
+        font-size: 0.63rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        color: #5a7a9a;
+    }
+
+    /* Inputs y selects a ancho completo */
+    .tc-input,
+    .tc-date,
+    .tc-select {
+        width: 100%;
+        box-sizing: border-box;
     }
 }

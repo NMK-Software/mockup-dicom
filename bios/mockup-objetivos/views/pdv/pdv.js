@@ -4,7 +4,7 @@
 
 const STORAGE_KEY = 'pdv-objectives-v2';
 
-const STATUS_OPTIONS = ['Pendiente', 'En curso', 'Cumplido', 'Estancado'];
+const STATUS_OPTIONS = ['Planeado', 'En curso', 'Cumplido', 'Retrasado'];
 const MAX_ROWS = 3;
 
 /* ── Configuración de secciones ──────────────────────── */
@@ -39,7 +39,7 @@ const SECTIONS = {
     planAccion: {
         label: 'Plan de acción',
         emptyRow: () => ({
-            accionesClaves: '', fechaFinal: '', estado: 'Pendiente', resultado: ''
+            accionesClaves: '', fechaFinal: '', estado: 'Planeado', resultado: ''
         }),
         columns: [
             { field: 'accionesClaves', label: 'Acciones claves',          type: 'text',   width: 240 },
@@ -58,7 +58,7 @@ function makeObjective(overrides = {}) {
         title: 'Nuevo objetivo',
         leader: '',
         dueDate: '',
-        status: 'Pendiente',
+        status: 'Planeado',
         kpiValue: '',
         diagnostico: [],
         areasOportunidad: [],
@@ -90,7 +90,7 @@ function defaultData() {
         makeObjective({
             createdAt: '2026-02-05T00:00:00',
             title: 'Alcanzar VPI de 330 en el segundo semestre',
-            leader: 'Carlos Mejia', dueDate: '2026-09-30', status: 'Pendiente',
+            leader: 'Carlos Mejia', dueDate: '2026-09-30', status: 'Planeado',
             kpiValue: '315',
             diagnostico: [SECTIONS.diagnostico.emptyRow()],
             areasOportunidad: [SECTIONS.areasOportunidad.emptyRow()],
@@ -99,7 +99,7 @@ function defaultData() {
         makeObjective({
             createdAt: '2026-02-20T00:00:00',
             title: 'Implementar protocolo de bioseguridad nivel 3',
-            leader: 'Laura Vargas', dueDate: '2026-11-30', status: 'Estancado',
+            leader: 'Laura Vargas', dueDate: '2026-11-30', status: 'Retrasado',
             kpiValue: '—',
             diagnostico: [SECTIONS.diagnostico.emptyRow()],
             areasOportunidad: [SECTIONS.areasOportunidad.emptyRow()],
@@ -137,7 +137,7 @@ function formatDate(d) {
 }
 
 function statusCls(s) {
-    return ({ 'Pendiente': 'status-pendiente', 'En curso': 'status-en-curso', 'Cumplido': 'status-cumplido', 'Estancado': 'status-estancado' })[s] || 'status-pendiente';
+    return ({ 'Planeado': 'status-planeado', 'En curso': 'status-en-curso', 'Cumplido': 'status-cumplido', 'Retrasado': 'status-retrasado' })[s] || 'status-planeado';
 }
 
 /* ── Persistencia ────────────────────────────────────── */
@@ -262,40 +262,33 @@ function renderAllSectionsRead(o) {
 
 function renderSectionTableRead(o, sectionKey) {
     const cfg = SECTIONS[sectionKey];
-    const rows = (o[sectionKey] || []).filter(row =>
-        cfg.columns.some(col => row[col.field] && row[col.field] !== 'Pendiente')
-    );
+    const row = (o[sectionKey] && o[sectionKey][0]) || cfg.emptyRow();
 
-    const emptyMsg = `<p class="section-empty-msg">Sin registros.</p>`;
-
-    const tableHtml = rows.length === 0 ? emptyMsg : `
-        <div class="section-table-wrap">
-            <table class="section-table">
-                <thead><tr>${cfg.columns.map(col =>
-                    `<th style="min-width:${col.width}px">${col.label}</th>`
-                ).join('')}</tr></thead>
-                <tbody>${rows.map(row =>
-                    `<tr>${cfg.columns.map(col => {
-                        let val;
-                        if (col.type === 'status') {
-                            val = `<span class="obj-status-tag ${statusCls(row[col.field])}">${esc(row[col.field] || '—')}</span>`;
-                        } else if (col.type === 'date') {
-                            val = `<span class="read-cell">${formatDate(row[col.field])}</span>`;
-                        } else {
-                            val = `<span class="read-cell">${esc(row[col.field] || '—')}</span>`;
-                        }
-                        return `<td>${val}</td>`;
-                    }).join('')}</tr>`
-                ).join('')}</tbody>
-            </table>
-        </div>`;
+    const cells = cfg.columns.map(col => {
+        let val;
+        if (col.type === 'status') {
+            val = `<span class="obj-status-tag ${statusCls(row[col.field])}">${esc(row[col.field] || '—')}</span>`;
+        } else if (col.type === 'date') {
+            val = `<span class="read-cell">${formatDate(row[col.field])}</span>`;
+        } else {
+            val = `<span class="read-cell">${esc(row[col.field] || '—')}</span>`;
+        }
+        return `<td data-label="${esc(col.label)}">${val}</td>`;
+    }).join('');
 
     return `
         <div class="obj-section" data-section-key="${sectionKey}">
             <div class="section-top">
                 <span class="section-label">${cfg.label}</span>
             </div>
-            ${tableHtml}
+            <div class="section-table-wrap">
+                <table class="section-table">
+                    <thead><tr>${cfg.columns.map(col =>
+                        `<th style="min-width:${col.width}px">${col.label}</th>`
+                    ).join('')}</tr></thead>
+                    <tbody><tr>${cells}</tr></tbody>
+                </table>
+            </div>
         </div>`;
 }
 
@@ -340,66 +333,44 @@ function renderAllSections(o) {
 
 function renderSectionTable(o, sectionKey) {
     const cfg = SECTIONS[sectionKey];
-    const rows = o[sectionKey] || [];
-    const canAdd = rows.length < MAX_ROWS;
+    const row = (o[sectionKey] && o[sectionKey][0]) || cfg.emptyRow();
     const indicatorId = `${o.id}__${sectionKey}`;
 
     const theadCells = cfg.columns.map(col =>
         `<th style="min-width:${col.width}px">${col.label}</th>`
-    ).join('') + '<th class="col-remove"></th>';
+    ).join('');
 
-    const tbodyRows = rows.map((row, ri) => {
-        const cells = cfg.columns.map(col => {
-            const attrs = `data-obj-id="${esc(o.id)}" data-section="${sectionKey}" data-row="${ri}" data-field="${col.field}"`;
-            let input;
-            if (col.type === 'date') {
-                input = `<input class="tc-input tc-date" type="date" ${attrs} value="${esc(row[col.field] || '')}">`;
-            } else if (col.type === 'status') {
-                const opts = STATUS_OPTIONS.map(s =>
-                    `<option value="${s}" ${s === row[col.field] ? 'selected' : ''}>${s}</option>`
-                ).join('');
-                input = `<select class="tc-select ${statusCls(row[col.field])}" ${attrs}>${opts}</select>`;
-            } else {
-                input = `<input class="tc-input" type="text" ${attrs} value="${esc(row[col.field] || '')}" placeholder="—">`;
-            }
-            return `<td>${input}</td>`;
-        }).join('');
-        return `<tr data-row="${ri}">${cells}
-            <td class="td-remove">
-                <button class="row-remove-btn" type="button"
-                    data-action="remove-row"
-                    data-obj-id="${esc(o.id)}" data-section="${sectionKey}" data-row="${ri}"
-                    title="Eliminar fila">×</button>
-            </td></tr>`;
+    const attrs = (field) => `data-obj-id="${esc(o.id)}" data-section="${sectionKey}" data-row="0" data-field="${field}"`;
+    const cells = cfg.columns.map(col => {
+        let input;
+        if (col.type === 'date') {
+            input = `<input class="tc-input tc-date" type="date" ${attrs(col.field)} value="${esc(row[col.field] || '')}">`;
+        } else if (col.type === 'status') {
+            const opts = STATUS_OPTIONS.map(s =>
+                `<option value="${s}" ${s === row[col.field] ? 'selected' : ''}>${s}</option>`
+            ).join('');
+            input = `<select class="tc-select ${statusCls(row[col.field])}" ${attrs(col.field)}>${opts}</select>`;
+        } else {
+            input = `<input class="tc-input" type="text" ${attrs(col.field)} value="${esc(row[col.field] || '')}" placeholder="—">`;
+        }
+        return `<td data-label="${esc(col.label)}">${input}</td>`;
     }).join('');
 
-    const emptyMsg = rows.length === 0
-        ? `<p class="section-empty-msg">Sin registros. Haz clic en <strong>+ Fila</strong> para agregar.</p>`
-        : '';
-
-    const tableHtml = rows.length > 0 ? `
+    const tableHtml = `
         <div class="section-table-wrap">
             <table class="section-table">
                 <thead><tr>${theadCells}</tr></thead>
-                <tbody>${tbodyRows}</tbody>
+                <tbody><tr data-row="0">${cells}</tr></tbody>
             </table>
-        </div>` : '';
-
-    const addBtn = canAdd
-        ? `<button class="table-add-row-btn" type="button" data-action="add-row" data-obj-id="${esc(o.id)}" data-section="${sectionKey}">+ Fila</button>`
-        : `<span class="row-limit-label">Máx. ${MAX_ROWS} filas</span>`;
+        </div>`;
 
     return `
         <div class="obj-section" data-section-key="${sectionKey}">
             <div class="section-top">
                 <span class="section-label">${cfg.label}</span>
-                <div class="section-actions">
-                    <span class="field-indicator" data-indicator="${indicatorId}"></span>
-                    ${addBtn}
-                </div>
+                <span class="field-indicator" data-indicator="${indicatorId}"></span>
             </div>
             ${tableHtml}
-            ${emptyMsg}
         </div>`;
 }
 
@@ -417,30 +388,6 @@ function bindDelegatedEvents() {
             const card = header.closest('.obj-card');
             setCardOpen(card, card.dataset.open !== 'true', true);
             syncExpandAllBtn(getVisible());
-            return;
-        }
-
-        // Añadir fila
-        const addRowBtn = e.target.closest('[data-action="add-row"]');
-        if (addRowBtn) {
-            const { objId, section } = addRowBtn.dataset;
-            const obj = state.find(o => o.id === objId);
-            if (!obj || obj[section].length >= MAX_ROWS) return;
-            obj[section].push(SECTIONS[section].emptyRow());
-            persistState();
-            refreshSections(objId);
-            return;
-        }
-
-        // Eliminar fila
-        const removeRowBtn = e.target.closest('[data-action="remove-row"]');
-        if (removeRowBtn) {
-            const { objId, section, row } = removeRowBtn.dataset;
-            const obj = state.find(o => o.id === objId);
-            if (!obj) return;
-            obj[section].splice(parseInt(row, 10), 1);
-            persistState();
-            refreshSections(objId);
             return;
         }
 
@@ -518,11 +465,11 @@ function bindDelegatedEvents() {
 
 /* ── Sincronización estado ───────────────────────────── */
 function syncCellToState(el) {
-    const { objId, section, row, field } = el.dataset;
+    const { objId, section, field } = el.dataset;
     const obj = state.find(o => o.id === objId);
     if (!obj) return;
-    const rowData = obj[section][parseInt(row, 10)];
-    if (rowData) rowData[field] = el.value;
+    if (!obj[section][0]) obj[section][0] = SECTIONS[section].emptyRow();
+    obj[section][0][field] = el.value;
 }
 
 function syncMetaToState(el) {

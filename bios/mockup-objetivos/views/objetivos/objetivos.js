@@ -1,4 +1,4 @@
-const statusOptions = ["Estancado", "En curso", "Cumplido"];
+const statusOptions = ["Planeado", "En curso", "Cumplido", "Retrasado"];
 
 const initialData = [
     {
@@ -30,7 +30,7 @@ const initialData = [
                                 task: "Crear version corta para reuniones de 15 minutos",
                                 leader: "Valentina Diaz",
                                 dueDate: "2026-04-22",
-                                status: "Estancado",
+                                status: "Retrasado",
                                 progress: 30,
                                 comment: "Falta feedback del equipo de direccion."
                             }
