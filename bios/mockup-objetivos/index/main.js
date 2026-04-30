@@ -120,8 +120,8 @@ closeButton.addEventListener("click", closeModal);
     const canal = new URLSearchParams(location.search).get('canal');
     const url = canal === '2' ? 'iframe.html?canal=2' : 'iframe.html?canal=1';
 
-    if (canal === '1') { pdvButton.hidden = true; }
-    else if (canal === '2') { openButton.hidden = true; }
+    if (canal === '2') { openButton.hidden = true; }
+    else { pdvButton.hidden = true; }
 
     document.getElementById('openTabLink').addEventListener('click', (e) => {
         e.preventDefault();
